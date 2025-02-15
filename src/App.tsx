@@ -1,39 +1,68 @@
-
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import './App.css';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configStore } from './Store/store';
-import Layout from './Components/Layout/Layout';
-import Reports from './Pages/Reports/Reports';
-import AddReports from './Pages/Reports/AddReports';
-import AddReport from './Pages/Reports/AddReport';
-import AddArticle from './Pages/Article/AddArticle';
+import { Suspense, lazy } from 'react';
+import './App.css';
 
-// Lazy loading components
+const Login = lazy(() => import('./Pages/Auth/Login'));
+const ForgotPassword = lazy(() => import('./Pages/Auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('./Pages/Auth/ResetPassword'));
+const Layout = lazy(() => import('./Components/Layout/Layout'));
+const Reports = lazy(() => import('./Pages/Reports/Reports'));
+const AddReports = lazy(() => import('./Pages/Reports/AddReports'));
+const AddReport = lazy(() => import('./Pages/Reports/AddReport'));
+const UpdateReport = lazy(() => import('./Pages/Reports/UpdateReport'));
+const Evidences = lazy(() => import('./Pages/Evidences/Evidences'));
+const AddEvidences = lazy(() => import('./Pages/Evidences/AddEvidences'));
+const AddEvidence = lazy(() => import('./Pages/Evidences/AddEvidence'));
+const UpdateEvidence = lazy(() => import('./Pages/Evidences/UpdateEvidence'));
+const Articles = lazy(() => import('./Pages/Article/Articles'));
+const AddArticle = lazy(() => import('./Pages/Article/AddArticle'));
+const ShowArticle = lazy(() => import('./Pages/Article/ShowArticle'));
+const UpdateArticle = lazy(() => import('./Pages/Article/UpdateArticle'));
+const Governmentals = lazy(() => import('./Pages/Governmentals/Governmentals'));
+const AddGovernmentals = lazy(() => import('./Pages/Governmentals/AddGovernmentals'));
+const UpdateGovernmental = lazy(() => import('./Pages/Governmentals/UpdateGovernmental'));
+const AddGovernmental = lazy(() => import('./Pages/Governmentals/AddGovernmental'));
+
+const Loading = () => <div>Loading...</div>;
+
 function App() {
-  const router = createBrowserRouter([
+  const router = createHashRouter([
     {
       path: '/',
-      element:<Layout />,
+      element: <Suspense fallback={<Loading />}><Login /></Suspense>,
+    },
+    {
+      path: '/forgot-password',
+      element: <Suspense fallback={<Loading />}><ForgotPassword /></Suspense>,
+    },
+    {
+      path: '/reset-password/:token',
+      element: <Suspense fallback={<Loading />}><ResetPassword /></Suspense>,
+    },
+    {
+      path: '/Dashboard',
+      element: <Suspense fallback={<Loading />}><Layout /></Suspense>,
       children: [
-        {
-          path: '/',
-          element: <Reports />,
-        },
-        {
-          path: '/add-reports',
-          element: <AddReports />,
-        },
-        {
-          path: '/add-report',
-          element: <AddReport />,
-        },
-        {
-          path:"/add-article",
-          element: <AddArticle />
-        }
-      ]
-    }
+        { index: true, element: <Suspense fallback={<Loading />}><Reports /></Suspense> },
+        { path: '/Dashboard/add-reports', element: <Suspense fallback={<Loading />}><AddReports /></Suspense> },
+        { path: '/Dashboard/add-report', element: <Suspense fallback={<Loading />}><AddReport /></Suspense> },
+        { path: '/Dashboard/edit-report/:reportId', element: <Suspense fallback={<Loading />}><UpdateReport /></Suspense> },
+        { path: '/Dashboard/evidences', element: <Suspense fallback={<Loading />}><Evidences /></Suspense> },
+        { path: '/Dashboard/add-evidences', element: <Suspense fallback={<Loading />}><AddEvidences /></Suspense> },
+        { path: '/Dashboard/add-evidence', element: <Suspense fallback={<Loading />}><AddEvidence /></Suspense> },
+        { path: '/Dashboard/edit-evidence/:reportId', element: <Suspense fallback={<Loading />}><UpdateEvidence /></Suspense> },
+        { path: '/Dashboard/articls', element: <Suspense fallback={<Loading />}><Articles /></Suspense> },
+        { path: '/Dashboard/add-article', element: <Suspense fallback={<Loading />}><AddArticle /></Suspense> },
+        { path: '/Dashboard/edit-article/:articleId', element: <Suspense fallback={<Loading />}><UpdateArticle /></Suspense> },
+        { path: '/Dashboard/ShowArticle/:articleId', element: <Suspense fallback={<Loading />}><ShowArticle /></Suspense> },
+        { path: '/Dashboard/governmentals', element: <Suspense fallback={<Loading />}><Governmentals /></Suspense> },
+        { path: '/Dashboard/add-governmentals', element: <Suspense fallback={<Loading />}><AddGovernmentals /></Suspense> },
+        { path: '/Dashboard/edit-governmental/:governmentalId', element: <Suspense fallback={<Loading />}><UpdateGovernmental /></Suspense> },
+        { path: '/Dashboard/add-governmental', element: <Suspense fallback={<Loading />}><AddGovernmental /></Suspense> },
+      ],
+    },
   ]);
 
   return (

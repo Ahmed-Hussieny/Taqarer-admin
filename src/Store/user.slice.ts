@@ -78,10 +78,16 @@ const userSlice = createSlice({
         user: [],
         loading: false,
         error: null,
+        currentPath : "",
+        activeNumber: 1
     },
     reducers: {
-        getClincsRequest(state) {
+        changeCurrentPath(state, action) {
             state.loading = true;
+            state.currentPath = action.payload; 
+        },
+        changeActiveNav(state, action) {
+            state.activeNumber = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -150,3 +156,4 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
+export const { changeCurrentPath, changeActiveNav } = userSlice.actions;

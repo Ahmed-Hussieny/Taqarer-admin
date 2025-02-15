@@ -174,7 +174,7 @@ const ResetPassword = () => {
                                 type="submit"
                                 className="w-full p-2 bg-main_color text-white rounded-md hover:opacity-80"
                             >
-                                تسجيل الدخول
+                                إعادة تعيين كلمة المرور
                             </button>
                         )}
                     </form>

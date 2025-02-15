@@ -35,7 +35,7 @@ export default function Login() {
                 localStorage.setItem('userToken', data.payload.userToken);
                 toast.success('تم تسجيل الدخول بنجاح');
                 setTimeout(() => {
-                    navigate('/');
+                    navigate('/Dashboard');
                 }, 1000);
             }
             setLoading(false);
@@ -141,7 +141,7 @@ export default function Login() {
                         )}
                     </form>
 
-                    <div className="text-center mt-3">
+                    {/* <div className="text-center mt-3">
                         <p>
                             ليس لديك حساب؟
                             <span
@@ -151,7 +151,7 @@ export default function Login() {
                                 تسجيل جديد
                             </span>
                         </p>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="hidden md:block md:w-2/3 bg-main_color p-6">

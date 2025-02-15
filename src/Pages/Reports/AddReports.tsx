@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import plus2 from '../../assets/Icons/DashBoard/plus2.svg';
@@ -7,6 +7,7 @@ import { useAppDispatch } from "../../Store/store";
 import { handleAddReports } from "../../Store/report.slice";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { changeCurrentPath } from "../../Store/user.slice";
 
 interface FormValues {
   reportExcel: File | null;
@@ -23,6 +24,10 @@ const AddReports: React.FC = () => {
   const validationSchema = Yup.object({
     reportExcel: Yup.mixed().required("مطلوب"),
   });
+
+  useEffect(()=>{
+    dispatch(changeCurrentPath('رفع التقارير'));
+  }, [])
 
   return (
     <div>

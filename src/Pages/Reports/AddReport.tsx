@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import plus2 from '../../assets/Icons/DashBoard/plus2.svg'
@@ -8,6 +8,7 @@ import { useAppDispatch } from "../../Store/store";
 import { handleAddReport } from "../../Store/report.slice";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { changeCurrentPath } from "../../Store/user.slice";
 
 interface FormValues {
   reportId: string;
@@ -22,6 +23,7 @@ interface FormValues {
 
 const OrderForm: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const navigate = useNavigate();
   const initialValues: FormValues = {
     reportId: "",
@@ -46,44 +48,47 @@ const OrderForm: React.FC = () => {
   });
 
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(changeCurrentPath('رفع التقارير'));
+  }, [])
   return (
     <div className="">
       <Toaster
-  position="top-center"
-  reverseOrder={false}
-/>
+        position="top-center"
+        reverseOrder={false}
+      />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={async(values) => {
+        onSubmit={async (values) => {
           console.log(values);
-            const formData = new FormData();
-            formData.append("reportId", values.reportId);
-            formData.append("name", values.reportName);
-            formData.append("classification", values.reportCategory);
-            formData.append("source", values.reportSource);
-            formData.append("year", values.reportYear ? values.reportYear.toString() : "");
-            formData.append("description", values.reportSummary);
-            formData.append("link", values.reportLink);
-          
-            if (values.reportPdf) {
-              formData.append("pdf", values.reportPdf);
-            }
-            const data =await dispatch(handleAddReport(formData));
-            if(data.payload.success){
-              toast.success('تمت الإضافة بنجاح');
-            }else{
-              toast.error(data.payload.message);
-            }
+          const formData = new FormData();
+          formData.append("reportId", values.reportId);
+          formData.append("name", values.reportName);
+          formData.append("classification", values.reportCategory);
+          formData.append("source", values.reportSource);
+          formData.append("year", values.reportYear ? values.reportYear.toString() : "");
+          formData.append("description", values.reportSummary);
+          formData.append("link", values.reportLink);
+
+          if (values.reportPdf) {
+            formData.append("pdf", values.reportPdf);
+          }
+          const data = await dispatch(handleAddReport(formData));
+          if (data.payload.success) {
+            toast.success('تمت الإضافة بنجاح');
+            navigate(-1);
+          } else {
+            toast.error(data.payload.message);
+          }
         }}
       >
         {({ setFieldValue }) => (
           <Form className="space-y-6">
-            <h2 className="font-bold">رفع التقرير</h2>
             <h2 className="font-bold text-main_color">ادخل بيانات التقرير</h2>
             {/* Row 1: Name & Category */}
             <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-            <div>
+              <div>
                 <label className="block text-sm font-medium">رقم التقرير</label>
                 <Field
                   type="text"
@@ -95,8 +100,8 @@ const OrderForm: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                <div>
+              </div>
+              <div>
                 <label className="block text-sm font-medium">اسم التقرير</label>
                 <Field
                   type="text"
@@ -108,8 +113,8 @@ const OrderForm: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                <div>
+              </div>
+              <div>
                 <label className="block text-sm font-medium">تصنيف التقرير</label>
                 <Field
                   type="text"
@@ -121,8 +126,8 @@ const OrderForm: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                
+              </div>
+
             </div>
 
             {/* Row 2: Source & Year */}
@@ -205,7 +210,9 @@ const OrderForm: React.FC = () => {
                 className="hidden"
                 onChange={(event) => {
                   if (event.currentTarget.files && event.currentTarget.files.length > 0) {
-                    setFieldValue("reportPdf", event.currentTarget.files[0]);
+                    const file = event.currentTarget.files[0];
+                    setFieldValue("reportPdf", file);
+                    setFileName(file.name);
                   }
                 }}
               />
@@ -225,6 +232,9 @@ const OrderForm: React.FC = () => {
                 </svg>
                 <span className="ml-2 text-gray-700">رفع ملف PDF</span>
               </label>
+              {fileName && (
+                <p className="mt-2 text-sm text-gray-600">الملف المحدد: {fileName}</p>
+              )}
               <ErrorMessage name="reportPdf" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 

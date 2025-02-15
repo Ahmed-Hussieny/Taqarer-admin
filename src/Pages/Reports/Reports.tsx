@@ -1,5 +1,5 @@
 import React from 'react'
-import ReportsTable from '../../Components/ReportsTable/ReportsTable'
+import ReportsTable from './ReportsTable'
 
 export default function Reports() {
   return (
