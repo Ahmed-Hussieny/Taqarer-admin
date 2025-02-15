@@ -27,8 +27,8 @@ const Layout = () => {
     dispatch(changeActiveNav(num))
   };
   const logOut = () => {
-    console.log('logOut')
-
+    localStorage.clear();
+    navigate('/');
   }
   return (
     <div className="min-h-screen bg-gray-100" dir="rtl">

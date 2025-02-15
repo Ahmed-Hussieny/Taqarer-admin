@@ -88,6 +88,7 @@ const UpdateReport: React.FC = () => {
         id: reportId as string,
         apiData: formData,
       }));
+      console.log(payload);
       if (payload.success) {
         toast.success("تم التحديث بنجاح");
         navigate(-1);

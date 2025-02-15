@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useAppDispatch } from "../../Store/store";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { changeCurrentPath } from "../../Store/user.slice";
+import { changeActiveNav, changeCurrentPath } from "../../Store/user.slice";
 import { handleAddEvidence } from "../../Store/evidence.slice";
 
 interface FormValues {
@@ -51,6 +51,7 @@ const AddEvidence: React.FC = () => {
   const dispatch = useAppDispatch();
   useEffect(()=>{
     dispatch(changeCurrentPath('رفع التقارير'));
+    dispatch(changeActiveNav(1));
   },[])
   return (
     <div className="">

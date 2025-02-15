@@ -191,8 +191,8 @@ const reportSlice = createSlice({
 
         builder.addCase(handleUpdateReport.fulfilled, (state, action) => {
             state.loading = false;
-            const index = state.reports.findIndex(guide => guide._id === action.payload.guide._id);
-            state.reports[index] = action.payload.guide;
+            const index = state.reports.findIndex(report => report._id === action.payload.report._id);
+            state.reports[index] = action.payload.report;
         });
         builder.addCase(handleUpdateReport.rejected, (state) => {
             state.loading = false;

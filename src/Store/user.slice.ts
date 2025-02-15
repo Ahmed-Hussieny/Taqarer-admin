@@ -72,6 +72,35 @@ export const HandelVerifyResetCode = createAsyncThunk("auth/HandelVerifyResetCod
         return err.response.data;
     };
 });
+
+export const HandleUpdateLoggedInUser = createAsyncThunk("auth/HandleUpdateLoggedInUser", async (data: {username:string, email:string}) => {
+    try {
+        const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/auth/updateLoggedInUser`, data,{
+            headers:{
+                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        const err = error as ApiErrorResponse;
+        return err.response.data;
+    };
+});
+
+export const HandleUpdateLoggedInPassword = createAsyncThunk("auth/HandleUpdateLoggedInPassword", async (data: {oldPassword:string, newPassword:string}) => {
+    try {
+        const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/auth/updateLoggedInUserPassword`, data,{
+            headers:{
+                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+            }
+        });
+        console.log( response.data);
+        return response.data;
+    } catch (error) {
+        const err = error as ApiErrorResponse;
+        return err.response.data;
+    };
+});
 const userSlice = createSlice({
     name: "user",
     initialState: {
@@ -150,6 +179,24 @@ const userSlice = createSlice({
             state.user = action.payload.userData;
         });
         builder.addCase(HandelVerifyResetCode.rejected, (state) => {
+            state.loading = false;
+        });
+
+        //^ HandleUpdateLoggedInUser
+        builder.addCase(HandleUpdateLoggedInUser.fulfilled, (state, action) => {
+            state.loading = false;
+            state.user = action.payload.userData;
+        });
+        builder.addCase(HandleUpdateLoggedInUser.rejected, (state) => {
+            state.loading = false;
+        });
+
+        //^ HandleUpdateLoggedInPassword
+        builder.addCase(HandleUpdateLoggedInPassword.fulfilled, (state, action) => {
+            state.loading = false;
+            state.user = action.payload.userData;
+        });
+        builder.addCase(HandleUpdateLoggedInPassword.rejected, (state) => {
             state.loading = false;
         });
     },
