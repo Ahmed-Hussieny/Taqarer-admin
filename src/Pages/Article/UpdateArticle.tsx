@@ -32,9 +32,11 @@ const UpdateArticle: React.FC = () => {
       [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
       ['link', 'image', 'video'],
       [{ align: [] }, { direction: 'rtl' }],
+      [{ color: [] }, { background: [] }],
       ['clean']
     ],
   };
+
 
   const [articleData, setArticleData] = useState<{ image?: string; title: string; description: string; content: string } | null>(null);
 
@@ -42,10 +44,9 @@ const UpdateArticle: React.FC = () => {
     if (articleId) {
       const response = await dispatch(handleGetArticle(articleId));
       const article = response.payload.article;
-      console.log('Article:', article);
       if (article) {
         setArticleData({
-          image: article.image, // Assuming image URL is provided
+          image: article.image, 
           title: article.title,
           description: article.description,
           content: article.content
@@ -71,13 +72,10 @@ const UpdateArticle: React.FC = () => {
     }
 
     try {
-      // Replace with your API call
-      // await axios.post('/api/articles', formData);
       const data = await dispatch(handleUpdateArticle({
         id: articleId!,
         apiData: formData
       }));
-      console.log('Response:', data);
       if (data.payload.success) {
         toast.success('تمت اضافة المقالة بنجاح');
         navigate(-1);

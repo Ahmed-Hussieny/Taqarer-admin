@@ -18,7 +18,7 @@ interface FormValues {
   reportYear: number | null;
   reportSummary: string;
   reportLink: string;
-  reportPdf: File | null;
+  pdf: File | null;
 }
 
 const UpdateEvidence: React.FC = () => {
@@ -35,7 +35,7 @@ const UpdateEvidence: React.FC = () => {
     reportYear: null,
     reportSummary: "",
     reportLink: "",
-    reportPdf: null,
+    pdf: null,
   });
 
   useEffect(() => {
@@ -43,7 +43,6 @@ const UpdateEvidence: React.FC = () => {
       if (!reportId) return;
       try {
         const { payload } = await dispatch(handleGetEvidence(reportId));
-        console.log(payload)
         if (payload?.success) {
           setInitialValues({
             reportId: payload.guide.reportId || "",
@@ -53,7 +52,7 @@ const UpdateEvidence: React.FC = () => {
             reportYear: payload.guide.year || null,
             reportSummary: payload.guide.description || "",
             reportLink: payload.guide.link || "",
-            reportPdf: null,
+            pdf: null,
           });
         }
       } catch {
@@ -71,7 +70,7 @@ const UpdateEvidence: React.FC = () => {
     reportYear: Yup.number().required("مطلوب"),
     reportSummary: Yup.string().required("مطلوب"),
     reportLink: Yup.string().url("يجب أن يكون رابط صالح").required("مطلوب"),
-    reportPdf: Yup.mixed().nullable(),
+    pdf: Yup.mixed().nullable(),
   });
 
   const handleSubmit = async (values: FormValues) => {
@@ -83,7 +82,7 @@ const UpdateEvidence: React.FC = () => {
     formData.append("year", values.reportYear?.toString() || "");
     formData.append("description", values.reportSummary);
     formData.append("link", values.reportLink);
-    if (values.reportPdf) formData.append("pdf", values.reportPdf);
+    if (values.pdf) formData.append("pdf", values.pdf);
 
     try {
       const { payload } = await dispatch(handleUpdateEvidence({
@@ -233,7 +232,7 @@ const UpdateEvidence: React.FC = () => {
                 onChange={(event) => {
                   if (event.currentTarget.files && event.currentTarget.files.length > 0) {
                     const file = event.currentTarget.files[0];
-                    setFieldValue("reportExcel", file);
+                    setFieldValue("pdf", file);
                     setFileName(file.name);
                   }
                 }}
@@ -257,7 +256,7 @@ const UpdateEvidence: React.FC = () => {
               {fileName && (
                 <p className="mt-2 text-sm text-gray-600">الملف المحدد: {fileName}</p>
               )}
-              <ErrorMessage name="reportPdf" component="div" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage name="pdf" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
             {/* Submit Button */}

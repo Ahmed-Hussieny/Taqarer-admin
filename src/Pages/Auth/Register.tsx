@@ -42,12 +42,8 @@ export default function Register() {
         onSubmit: async (values) => {
             setLoading(true);
             const data = await dispatch(handleRegister(values));
-            console.log(data.payload);
             if (data.payload.success) {
                 toast.success('تم انشاء الحساب بنجاح، الرجاء التوجه للبريد الإلكتروني للتأكيد');
-                // setTimeout(() => {
-                //     // navigate('/');
-                // }, 1000);
             }else{
                 toast.error(data.payload.message);
             }

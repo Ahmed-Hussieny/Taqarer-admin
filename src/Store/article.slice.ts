@@ -23,7 +23,6 @@ export const handleAddArticle = createAsyncThunk("article/handleAddArticle", asy
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -38,7 +37,6 @@ export const handleDeleteArticle = createAsyncThunk("guide/handleDeleteArticle",
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -65,7 +63,6 @@ export const handleUpdateArticle = createAsyncThunk("guide/handleUpdateArticle",
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -122,9 +119,8 @@ const articleSlice = createSlice({
             state.loading = false;
         });
 
-        builder.addCase(handleUpdateArticle.fulfilled, (state, action) => {
+        builder.addCase(handleUpdateArticle.fulfilled, (state) => {
             state.loading = false;
-            console.log(action.payload);
         });
         builder.addCase(handleUpdateArticle.rejected, (state) => {
             state.loading = false;

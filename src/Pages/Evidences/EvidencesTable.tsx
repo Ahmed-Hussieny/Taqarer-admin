@@ -25,49 +25,31 @@ export default function EvidencesTable() {
     const [nameOptions, setNameOptions] = useState<DropdownItem[]>([]);
     const [sourceOptions, setSourceOptions] = useState<DropdownItem[]>([]);
     const [yearOptions, setYearOptions] = useState<DropdownItem[]>([]);
-    const { evidences, sourceFilters, nameFilters, yearFilters, numberOfPages } = useSelector((state: { evidences: { evidences: Evidence[], sourceFilters: string[], nameFilters: string[], yearFilters: string[], numberOfPages: number } }) => state.evidences);
-    const navigete = useNavigate();
-
-    const handleAction = async (reportId: string, action: string) => {
-        if (action === 'edit') {
-            navigete(`/Dashboard/edit-evidence/${reportId}`);
-        } else if (action === 'delete') {
-            const data = await dispatch(handleDeleteEvidence(reportId));
-            if (data.payload.success) {
-                toast.success('تم حذف الدليل بنجاح');
-            } else {
-                toast.error(data.payload.message);
-            }
-        } else if (action === 'download') {
-            const data = await dispatch(handelDownloadEvidence(reportId));
-            if ((data.payload as { success: boolean }).success) {
-                toast.success('تم تحميل الدليل بنجاح');
-            } else {
-                toast.error('حدث خطأ أثناء تحميل الدليل');
-            }
-        }
-    };
+    const { evidences, sourceFilters, classifications, yearFilters, numberOfPages } = useSelector((state: { evidences: { evidences: Evidence[], sourceFilters: string[], classifications: string[], yearFilters: string[], numberOfPages: number } }) => state.evidences);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [reportIdToDelete, setReportIdToDelete] = useState<string | null>(null);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const changeCurrentPage = (page: number) => {
         setCurrentPage(page);
         fetchData({ page });
     };
-
-    const dispatch = useAppDispatch();
+    
     const fetchData = async ({
         page = 1,
-        name = '',
+        classification = '',
         source = '',
         year = '',
         custom = '',
-    }: { page?: number, name?: string, source?: string, year?: string, custom?: string }) => {
-        await dispatch(handleGetAllEvidences({ page, name, source, year, custom }));
+    }: { page?: number, classification?: string, source?: string, year?: string, custom?: string }) => {
+        await dispatch(handleGetAllEvidences({ page, classification, source, year, custom }));
     };
 
     useEffect(() => {
         setNameOptions([
             { value: '', label: 'الكل' },
-            ...(nameFilters ? nameFilters.map((report: string) => ({ value: report, label: report })) : []),
+            ...(classifications ? classifications.map((report: string) => ({ value: report, label: report })) : []),
         ]);
         setSourceOptions([
             { value: '', label: 'الكل' },
@@ -77,7 +59,7 @@ export default function EvidencesTable() {
             { value: '', label: 'الكل' },
             ...(yearFilters ? yearFilters.map((report: string) => ({ value: report, label: report })) : []),
         ]);
-    }, [nameFilters, sourceFilters, yearFilters]);
+    }, [classifications, sourceFilters, yearFilters]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -87,20 +69,65 @@ export default function EvidencesTable() {
     }, []);
 
     const handleNameChange = (value: string) => {
-        fetchData({ name: value, source: selectedSource, year: selectedYear });
+        fetchData({ classification: value, source: selectedSource, year: selectedYear });
         setSelectedName(value);
     }
 
     const handleSourceChange = (value: string) => {
-        fetchData({ name: selectedName, source: value, year: selectedYear });
+        fetchData({ classification: selectedName, source: value, year: selectedYear });
         setSelectedSource(value);
     };
     const handleYearChange = (value: string) => {
-        fetchData({ name: selectedName, source: selectedSource, year: value });
+        fetchData({ classification: selectedName, source: selectedSource, year: value });
         setSelectedYear(value);
     }
     const handleKeyUp = (event: React.ChangeEvent<HTMLInputElement>) => {
         fetchData({ custom: (event.target as HTMLInputElement).value });
+    };
+    const handleAction = async (reportId: string, action: string) => {
+        try {
+            switch (action) {
+                case 'edit':
+                    navigate(`/Dashboard/edit-evidence/${reportId}`);
+                    break;
+
+                case 'delete':
+                    setReportIdToDelete(reportId); // Set the report ID to delete
+                    setShowDeleteModal(true); // Show the delete confirmation modal
+                    break;
+
+                case 'download':
+                    await handleDownloadAction(reportId);
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (error) {
+            console.error(`Error handling action "${action}":`, error);
+            toast.error('حدث خطأ أثناء تنفيذ العملية');
+        }
+    };
+    const handleDeleteAction = async () => {
+        if (!reportIdToDelete) return;
+
+        const data = await dispatch(handleDeleteEvidence(reportIdToDelete));
+        if (data.payload.success) {
+            toast.success('تم حذف الدليل بنجاح');
+        } else {
+            toast.error(data.payload.message);
+        }
+
+        setShowDeleteModal(false); // Close the modal after deletion
+        setReportIdToDelete(null); // Reset the report ID
+    };
+    const handleDownloadAction = async (reportId: string) => {
+        const data = await dispatch(handelDownloadEvidence(reportId));
+        if ((data.payload as { success: boolean }).success) {
+            toast.success('تم تحميل الدليل بنجاح');
+        } else {
+            toast.error('حدث خطأ أثناء تحميل الدليل');
+        }
     };
 
     return (
@@ -156,7 +183,7 @@ export default function EvidencesTable() {
                         </div>
                         <div className="flex col-span- items-center md:justify-end pb-3 sm:pb-4 justify-center gap-2">
                             <button
-                                onClick={() => navigete('/Dashboard/add-evidence')}
+                                onClick={() => navigate('/Dashboard/add-evidence')}
                                 className="text-black text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] transition-colors"
                                 title="اضافة دليل"
                             >
@@ -164,7 +191,7 @@ export default function EvidencesTable() {
                                 <span className=' sm:inline pe-2'>اضافة دليل</span>
                             </button>
                             <button
-                                onClick={() => navigete('/Dashboard/add-evidences')}
+                                onClick={() => navigate('/Dashboard/add-evidences')}
                                 className="text-white  text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
                                 title="اضافة مجموعة ادلة"
                             >
@@ -263,8 +290,8 @@ export default function EvidencesTable() {
                                 key={index + 1}
                                 onClick={() => changeCurrentPage(index + 1)}
                                 className={`px-3 py-1 flex items-center justify-center ${currentPage === index + 1
-                                        ? 'bg-[#BBC3CF]  text-black border'
-                                        : 'text-black bg-[#F7F8F9] border border-1/2 border-slate-300'
+                                    ? 'bg-[#BBC3CF]  text-black border'
+                                    : 'text-black bg-[#F7F8F9] border border-1/2 border-slate-300'
                                     }`}
                                 aria-label={`الصفحة ${index + 1}`}
                             >
@@ -284,6 +311,30 @@ export default function EvidencesTable() {
                     </button>
                 </div>
             </div>
+
+            {showDeleteModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-xl font-bold mb-4">تأكيد الحذف</h2>
+                        <p className="mb-6">هل أنت متأكد أنك تريد حذف هذا الدليل؟</p>
+                        <div className="grid grid-cols-2 gap-2 space-x-4">
+                            <button
+                                className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                                onClick={() => setShowDeleteModal(false)}
+                            >
+                                إلغاء
+                            </button>
+                            <button
+                                className="bg-red-500 text-white px-4 py-2 rounded"
+                                onClick={handleDeleteAction}
+                            >
+                                حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

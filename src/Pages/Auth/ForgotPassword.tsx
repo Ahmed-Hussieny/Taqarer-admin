@@ -24,7 +24,6 @@ export default function ForgotPassword() {
         onSubmit: async (values) => {
             setLoading(true);
             const data = await dispatch(HandelForgotPassword(values.email));
-            console.log(data.payload);
             if (data.payload.success) {
                 toast.success('تم ارسال رابط استعادة كلمة المرور الى بريدك الالكتروني');
             }

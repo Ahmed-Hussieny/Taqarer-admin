@@ -94,7 +94,6 @@ export const HandleUpdateLoggedInPassword = createAsyncThunk("auth/HandleUpdateL
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log( response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;

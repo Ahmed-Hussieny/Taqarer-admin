@@ -18,7 +18,7 @@ interface FormValues {
   reportYear: number | null;
   reportSummary: string;
   reportLink: string;
-  reportPdf: File | null;
+  pdf: File | null;
 }
 
 const UpdateReport: React.FC = () => {
@@ -34,7 +34,7 @@ const UpdateReport: React.FC = () => {
     reportYear: null,
     reportSummary: "",
     reportLink: "",
-    reportPdf: null,
+    pdf: null,
   });
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const UpdateReport: React.FC = () => {
             reportYear: payload.report.year || null,
             reportSummary: payload.report.description || "",
             reportLink: payload.report.link || "",
-            reportPdf: null,
+            pdf: null,
           });
         }
       } catch {
@@ -69,7 +69,7 @@ const UpdateReport: React.FC = () => {
     reportYear: Yup.number().required("مطلوب"),
     reportSummary: Yup.string().required("مطلوب"),
     reportLink: Yup.string().url("يجب أن يكون رابط صالح").required("مطلوب"),
-    reportPdf: Yup.mixed().nullable(),
+    pdf: Yup.mixed(),
   });
 
   const handleSubmit = async (values: FormValues) => {
@@ -81,14 +81,12 @@ const UpdateReport: React.FC = () => {
     formData.append("year", values.reportYear?.toString() || "");
     formData.append("description", values.reportSummary);
     formData.append("link", values.reportLink);
-    if (values.reportPdf) formData.append("pdf", values.reportPdf);
-
+    if (values.pdf) formData.append("pdf", values.pdf); 
     try {
       const { payload } = await dispatch(handleUpdateReport({
         id: reportId as string,
         apiData: formData,
       }));
-      console.log(payload);
       if (payload.success) {
         toast.success("تم التحديث بنجاح");
         navigate(-1);
@@ -104,9 +102,9 @@ const UpdateReport: React.FC = () => {
     }
   };
 
-    useEffect(()=>{
-      dispatch(changeCurrentPath('رفع التقارير'));
-    },[])
+  useEffect(() => {
+    dispatch(changeCurrentPath('رفع التقارير'));
+  }, [])
 
   return (
     <div className="p-4 py-0">
@@ -122,7 +120,7 @@ const UpdateReport: React.FC = () => {
             <h2 className="font-bold text-main_color">ادخل بيانات التقرير</h2>
             {/* Row 1: Name & Category */}
             <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-            <div>
+              <div>
                 <label className="block text-sm font-medium">رقم التقرير</label>
                 <Field
                   type="text"
@@ -134,8 +132,8 @@ const UpdateReport: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                <div>
+              </div>
+              <div>
                 <label className="block text-sm font-medium">اسم التقرير</label>
                 <Field
                   type="text"
@@ -147,8 +145,8 @@ const UpdateReport: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                <div>
+              </div>
+              <div>
                 <label className="block text-sm font-medium">تصنيف التقرير</label>
                 <Field
                   type="text"
@@ -160,34 +158,34 @@ const UpdateReport: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                
+              </div>
+
             </div>
 
             {/* Row 2: Source & Year */}
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
-  <div className="col-span-1">
-    <label className="block text-sm font-medium">مصدر التقرير</label>
-    <Field
-      type="text"
-      name="reportSource"
-      className="mt-1 block w-full bg-[#F7F8F9] p-2 rounded-lg border border-[#999999]"
-    />
-    <ErrorMessage name="reportSource" component="div" className="text-red-500 text-sm" />
-  </div>
+              <div className="col-span-1">
+                <label className="block text-sm font-medium">مصدر التقرير</label>
+                <Field
+                  type="text"
+                  name="reportSource"
+                  className="mt-1 block w-full bg-[#F7F8F9] p-2 rounded-lg border border-[#999999]"
+                />
+                <ErrorMessage name="reportSource" component="div" className="text-red-500 text-sm" />
+              </div>
 
-  <div className="col-span-1">
-    <label htmlFor="reportYear" className="block font-medium">سنة التقرير</label>
-    <DatePicker
-      selected={values.reportYear ? new Date(values.reportYear, 0) : null}
-      onChange={(date) => setFieldValue("reportYear", date ? date.getFullYear() : null)}
-      showYearPicker
-      dateFormat="yyyy"
-      className="w-full bg-[#F7F8F9] p-2 rounded-lg border border-[#999999]"
-    />
-    <ErrorMessage name="reportYear" component="div" className="text-red-500 text-sm" />
-  </div>
-</div>
+              <div className="col-span-1">
+                <label htmlFor="reportYear" className="block font-medium">سنة التقرير</label>
+                <DatePicker
+                  selected={values.reportYear ? new Date(values.reportYear, 0) : null}
+                  onChange={(date) => setFieldValue("reportYear", date ? date.getFullYear() : null)}
+                  showYearPicker
+                  dateFormat="yyyy"
+                  className="w-full bg-[#F7F8F9] p-2 rounded-lg border border-[#999999]"
+                />
+                <ErrorMessage name="reportYear" component="div" className="text-red-500 text-sm" />
+              </div>
+            </div>
 
             {/* Summary */}
             <div >
@@ -220,7 +218,6 @@ const UpdateReport: React.FC = () => {
               />
             </div>
 
-            {/* PDF Upload */}
             <div>
               <label className="block text-sm font-medium">رفع الملفات</label>
               <input
@@ -232,7 +229,7 @@ const UpdateReport: React.FC = () => {
                 onChange={(event) => {
                   if (event.currentTarget.files && event.currentTarget.files.length > 0) {
                     const file = event.currentTarget.files[0];
-                    setFieldValue("reportExcel", file);
+                    setFieldValue("pdf", file);
                     setFileName(file.name);
                   }
                 }}
@@ -256,7 +253,7 @@ const UpdateReport: React.FC = () => {
               {fileName && (
                 <p className="mt-2 text-sm text-gray-600">الملف المحدد: {fileName}</p>
               )}
-              <ErrorMessage name="reportPdf" component="div" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage name="pdf" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
             {/* Submit Button */}
@@ -270,6 +267,7 @@ const UpdateReport: React.FC = () => {
                 <span className='sm:inline pe-2'>الغاء</span>
               </button>
               <button
+                type="submit"
                 className="text-white  text-sm flex items-center gap-1 rounded-lg py-3 px-3 hover:bg-green-600 bg-main_color transition-colors"
                 title="اضافة التقرير"
               >

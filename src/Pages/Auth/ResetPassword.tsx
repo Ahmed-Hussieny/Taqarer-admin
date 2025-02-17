@@ -58,10 +58,8 @@ const ResetPassword = () => {
         },
         validationSchema,
         onSubmit: async (values) => {
-            console.log(values);
             setLoading(true);
             const data = await dispatch(HandelResetPassword({ token: values.token as string, newPassword: values.newPassword }));
-            console.log(data.payload);
             if (data.payload.success) {
                 toast.success(' تم تغيير كلمة المرور بنجاح');
             }else{

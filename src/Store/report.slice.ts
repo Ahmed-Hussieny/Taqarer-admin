@@ -5,13 +5,13 @@ import { Report } from "../Interfaces/report";
 
 export const handleGetAllReports = createAsyncThunk("report/handleGetAllReports", async ({
     page,
-    name = "",
+    classification = "",
     source = "",
     year = "",
     custom = ""
-}: { page: number, name?: string, source?: string, year?: string, custom?: string }) => {
+}: { page: number, classification?: string, source?: string, year?: string, custom?: string }) => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/GetALLReports?page=${page}&custom=${custom}&name=${name}&source=${source}&year=${year}`);
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/GetALLReports?page=${page}&custom=${custom}&classification=${classification}&source=${source}&year=${year}`);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -36,7 +36,6 @@ export const handleAddReport = createAsyncThunk("report/handleAddReport", async 
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log( response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -52,7 +51,6 @@ export const handleUpdateReport = createAsyncThunk("report/handleUpdateReport", 
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log( response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -68,7 +66,6 @@ export const handleAddReports = createAsyncThunk("report/handleAddReports", asyn
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log( response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -142,10 +139,9 @@ const reportSlice = createSlice({
             state.loading = false;
             state.reports = action.payload.reports.data;
             state.numberOfPages = action.payload.reports.totalPages;
-            state.nameFilters = action.payload.reports.filterData.names;
+            state.nameFilters = action.payload.reports.filterData.classification;
             state.sourceFilters = action.payload.reports.filterData.sources;
             state.yearFilters = action.payload.reports.filterData.years;
-            console.log(state.sourceFilters)
         });
         builder.addCase(handleGetAllReports.rejected, (state) => {
             state.loading = false;

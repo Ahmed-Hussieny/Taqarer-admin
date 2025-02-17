@@ -61,7 +61,6 @@ const OrderForm: React.FC = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
-          console.log(values);
           const formData = new FormData();
           formData.append("reportId", values.reportId);
           formData.append("name", values.reportName);

@@ -45,7 +45,6 @@ const SettingsPage = () => {
         username: profile.username,
         email: profile.email
     }))
-    console.log(data);
     if(data.payload.success){
         toast.success('تم تحديث الملف الشخصي بنجاح!');
     }else{
@@ -75,7 +74,6 @@ const SettingsPage = () => {
         oldPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword
       }))
-      console.log(data);
       if(data.payload.success){
         toast.success('تم تحديث كلمة المرور بنجاح!');
       }else{

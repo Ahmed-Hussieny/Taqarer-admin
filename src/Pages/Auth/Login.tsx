@@ -30,13 +30,14 @@ export default function Login() {
         onSubmit: async (values) => {
             setLoading(true);
             const data = await dispatch(handleLogin(values));
-            console.log(data.payload);
             if (data.payload.success) {
                 localStorage.setItem('userToken', data.payload.userToken);
                 toast.success('تم تسجيل الدخول بنجاح');
                 setTimeout(() => {
                     navigate('/Dashboard');
                 }, 1000);
+            }else{
+                toast.error(data.payload.message);
             }
             setLoading(false);
         }
@@ -46,7 +47,7 @@ export default function Login() {
     return (
         <div className="m-0 p-0 " dir="rtl">
             <Toaster
-            position="top-left"
+            position="top-center"
             reverseOrder={false}
             />
             <div className="flex flex-wrap m-0 p-0 h-screen ">

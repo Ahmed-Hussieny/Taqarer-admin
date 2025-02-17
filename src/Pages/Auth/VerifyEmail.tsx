@@ -44,10 +44,8 @@ const VerifyEmail = () => {
     const resendEmail = async () => {
 
         try {
-            // console.log("sss")
             if (token) {
                 const data = await dispatch(HandelresendVerificationEmail(token));
-                console.log(data)
                 if (data.payload.success) {
                     setVerify(true);
                     toast.success(data.payload.message);

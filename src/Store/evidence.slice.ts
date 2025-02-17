@@ -5,13 +5,13 @@ import { Evidence } from "../Interfaces/evidence";
 
 export const handleGetAllEvidences = createAsyncThunk("guide/handleGetAllEvidences", async ({
     page,
-    name = "",
+    classification = "",
     source = "",
     year = "",
     custom = ""
-}: { page: number, name?: string, source?: string, year?: string, custom?: string }) => {
+}: { page: number, classification?: string, source?: string, year?: string, custom?: string }) => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/guide/GetALLGuides?page=${page}&custom=${custom}&name=${name}&source=${source}&year=${year}`);
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/guide/GetALLGuides?page=${page}&custom=${custom}&classification=${classification}&source=${source}&year=${year}`);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -36,7 +36,6 @@ export const handleAddEvidence = createAsyncThunk("guide/handleAddEvidence", asy
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log( response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -67,7 +66,6 @@ export const handleAddEvidences = createAsyncThunk("guide/handleAddEvidences", a
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log( response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -82,7 +80,6 @@ export const handleDeleteEvidence = createAsyncThunk("guide/handleDeleteEvidence
                 accesstoken: `Bearer_${localStorage.getItem("userToken")}`
             }
         });
-        console.log( response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -125,7 +122,7 @@ const evidenceSlice = createSlice({
     name: "evidence",
     initialState: {
         evidences: [] as Evidence[],
-        nameFilters: [] as string[],
+        classifications: [] as string[],
         sourceFilters: [] as string[],
         yearFilters: [] as string[],
         numberOfPages: 0,
@@ -142,7 +139,7 @@ const evidenceSlice = createSlice({
             state.loading = false;
             state.evidences = action.payload.guides.data;
             state.numberOfPages = action.payload.guides.totalPages;
-            state.nameFilters = action.payload.guides.filterData.names;
+            state.classifications = action.payload.guides.filterData.classifications;
             state.sourceFilters = action.payload.guides.filterData.sources;
             state.yearFilters = action.payload.guides.filterData.years;
         });
@@ -168,7 +165,7 @@ const evidenceSlice = createSlice({
 
         builder.addCase(handleDeleteEvidence.fulfilled, (state, action) => {
             state.loading = false;
-            state.evidences = state.evidences.filter(report => report._id !== action.payload.guide._id);
+            state.evidences = state.evidences.filter(evidence => evidence._id !== action.payload.guide._id);
         });
         builder.addCase(handleDeleteEvidence.rejected, (state) => {
             state.loading = false;
@@ -190,8 +187,8 @@ const evidenceSlice = createSlice({
 
         builder.addCase(handleUpdateEvidence.fulfilled, (state, action) => {
             state.loading = false;
-            const index = state.evidences.findIndex(report => report._id === action.payload.report._id);
-            state.evidences[index] = action.payload.report;
+            const index = state.evidences.findIndex(guide => guide._id === action.payload.guide._id);
+            state.evidences[index] = action.payload.guide;
         });
         builder.addCase(handleUpdateEvidence.rejected, (state) => {
             state.loading = false;

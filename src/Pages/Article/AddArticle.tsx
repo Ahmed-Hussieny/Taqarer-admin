@@ -24,15 +24,10 @@ const ArticleEditor: React.FC = () => {
           return ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].includes((value as File).type);
         }
         return true;
-      })
-      .test('fileSize', 'الحجم الأقصى للصورة 800 كيلوبايت', value => {
-        if (value) {
-          return (value as File).size <= 800000;
-        }
-        return true;
       }),
     title: yup.string().required('العنوان مطلوب'),
     description: yup.string().required('الوصف مطلوب'),
+    link: yup.string().url('الرابط غير صحيح'),
     content: yup.string().required('محتوى المقال مطلوب')
   });
 
@@ -43,6 +38,7 @@ const ArticleEditor: React.FC = () => {
       [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
       ['link', 'image', 'video'],
       [{ align: [] }, { direction: 'rtl' }],
+      [{ color: [] }, { background: [] }],
       ['clean']
     ],
   };
@@ -53,20 +49,18 @@ const ArticleEditor: React.FC = () => {
     dispatch(changeActiveNav(3));
   }, []);
 
-  const handleSubmit = async (values: { image: File | null; title: string; description: string; content: string }, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+  const handleSubmit = async (values: { image: File | null; title: string; link: string; description: string; content: string }, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
     const formData = new FormData();
     formData.append('title', values.title);
     formData.append('description', values.description);
     formData.append('content', values.content);
+    formData.append('link', values.link);
     if (values.image) {
       formData.append('image', values.image);
     }
 
     try {
-      // Replace with your API call
-      // await axios.post('/api/articles', formData);
       const data = await dispatch(handleAddArticle(formData));
-      console.log('Response:', data);
       if(data.payload.success) {
         toast.success('تمت اضافة المقالة بنجاح');
         navigate(-1);
@@ -86,7 +80,8 @@ const ArticleEditor: React.FC = () => {
         image: null as File | null,
         title: '',
         description: '',
-        content: ''
+        content: '',
+        link: ''
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
@@ -148,6 +143,17 @@ const ArticleEditor: React.FC = () => {
             placeholder="عنوان المقالة"
           />
           <ErrorMessage name="title" component="div" className="text-red-500 text-sm mb-2" />
+
+
+          <p className="text-lg my-2 font-bold whitespace-nowrap">رابط المقالة</p>
+          <Field
+            type="text"
+            name="link"
+            className='w-full mb-1 border bg-[#F7F8F9] p-2 rounded-lg'
+            placeholder="عنوان المقالة"
+          />
+          <ErrorMessage name="link" component="div" className="text-red-500 text-sm mb-2" />
+
 
           <p className="text-lg my-2 font-bold whitespace-nowrap">وصف المقالة</p>
           <Field

@@ -50,8 +50,8 @@ const AddEvidence: React.FC = () => {
 
   const dispatch = useAppDispatch();
   useEffect(()=>{
-    dispatch(changeCurrentPath('رفع التقارير'));
-    dispatch(changeActiveNav(1));
+    dispatch(changeCurrentPath('رفع الدليل'));
+    dispatch(changeActiveNav(2));
   },[])
   return (
     <div className="">
@@ -63,7 +63,6 @@ const AddEvidence: React.FC = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async(values) => {
-          console.log(values);
             const formData = new FormData();
             formData.append("reportId", values.reportId);
             formData.append("name", values.reportName);
@@ -87,11 +86,11 @@ const AddEvidence: React.FC = () => {
       >
         {({ setFieldValue }) => (
           <Form className="space-y-6">
-            <h2 className="font-bold text-main_color">ادخل بيانات التقرير</h2>
+            <h2 className="font-bold text-main_color">ادخل بيانات الدليل</h2>
             {/* Row 1: Name & Category */}
             <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
             <div>
-                <label className="block text-sm font-medium">رقم التقرير</label>
+                <label className="block text-sm font-medium">رقم الدليل</label>
                 <Field
                   type="text"
                   name="reportId"
@@ -104,7 +103,7 @@ const AddEvidence: React.FC = () => {
                 />
                 </div>
                 <div>
-                <label className="block text-sm font-medium">اسم التقرير</label>
+                <label className="block text-sm font-medium">اسم الدليل</label>
                 <Field
                   type="text"
                   name="reportName"
@@ -117,7 +116,7 @@ const AddEvidence: React.FC = () => {
                 />
                 </div>
                 <div>
-                <label className="block text-sm font-medium">تصنيف التقرير</label>
+                <label className="block text-sm font-medium">تصنيف الدليل</label>
                 <Field
                   type="text"
                   name="reportCategory"
@@ -135,7 +134,7 @@ const AddEvidence: React.FC = () => {
             {/* Row 2: Source & Year */}
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <div >
-                <label className="block text-sm font-medium">مصدر التقرير</label>
+                <label className="block text-sm font-medium">مصدر الدليل</label>
                 <Field
                   type="text"
                   name="reportSource"
@@ -148,7 +147,7 @@ const AddEvidence: React.FC = () => {
                 />
               </div>
               <div className="w-full bg">
-                <label className="block text-sm font-medium">سنة التقرير</label>
+                <label className="block text-sm font-medium">سنة الدليل</label>
                 <DatePicker
                   selected={selectedYear ? new Date(selectedYear, 0, 1) : null}
                   onChange={(date) => {
@@ -172,7 +171,7 @@ const AddEvidence: React.FC = () => {
 
             {/* Summary */}
             <div >
-              <label className="block text-sm font-medium">نبذه عن التقرير</label>
+              <label className="block text-sm font-medium">نبذه عن الدليل</label>
               <Field
                 as="textarea"
                 name="reportSummary"
@@ -187,7 +186,7 @@ const AddEvidence: React.FC = () => {
 
             {/* Report Link */}
             <div>
-              <label className="block text-sm font-medium">رابط التقرير الأساسي</label>
+              <label className="block text-sm font-medium">رابط الدليل الأساسي</label>
               <Field
                 type="text"
                 name="reportLink"
@@ -253,10 +252,10 @@ const AddEvidence: React.FC = () => {
               <button
                 // onClick={() => navigete('/add-reports')}
                 className="text-white  text-sm flex items-center gap-1 rounded-lg py-3 px-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
-                title="اضافة التقرير"
+                title="اضافة الدليل"
               >
                 <img src={plus2} alt='plus2' className="w-4 h-4" />
-                <span className=' sm:inline pe-2'>اضافة التقرير</span>
+                <span className=' sm:inline pe-2'>اضافة الدليل</span>
               </button>
             </div>
           </Form>

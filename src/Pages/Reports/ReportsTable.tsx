@@ -32,27 +32,46 @@ export default function ReportsTable() {
     const [sourceOptions, setSourceOptions] = useState<DropdownItem[]>([]);
     const [yearOptions, setYearOptions] = useState<DropdownItem[]>([]);
     const { reports, sourceFilters, nameFilters, yearFilters, numberOfPages } = useSelector((state: { reports: { reports: Report[], sourceFilters: string[], nameFilters: string[], yearFilters: string[], numberOfPages: number } }) => state.reports);
-    const navigete = useNavigate();
-    // Pagination calculations
-
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [reportIdToDelete, setReportIdToDelete] = useState<string | null>(null);
+    const navigate = useNavigate();
     const handleAction = async (reportId: string, action: string) => {
-        if (action === 'edit') {
-            navigete(`/Dashboard/edit-report/${reportId}`);
-        } else if (action === 'delete') {
-            const data = await dispatch(handleDeleteReport(reportId));
-            if (data.payload.success) {
-                toast.success('تم حذف التقرير بنجاح');
-            } else {
-                toast.error(data.payload.message);
+        try {
+            switch (action) {
+                case 'edit':
+                    navigate(`/Dashboard/edit-report/${reportId}`);
+                    break;
+
+                case 'delete':
+                    setReportIdToDelete(reportId); // Set the report ID to delete
+                    setShowDeleteModal(true); // Show the delete confirmation modal
+                    break;
+
+                case 'download':
+                    await dispatch(handelDownloadReport(reportId));
+                    break;
+
+                default:
+                    break;
             }
-        } else if (action === 'download') {
-            const data = await dispatch(handelDownloadReport(reportId));
-            if ((data.payload as { success: boolean }).success) {
-                toast.success('تم تحميل التقرير بنجاح');
-            } else {
-                toast.error('حدث خطأ أثناء تحميل التقرير');
-            }
+        } catch (error) {
+            console.error(`Error handling action "${action}":`, error);
+            toast.error('حدث خطأ أثناء تنفيذ العملية');
         }
+    };
+
+    const handleDeleteAction = async () => {
+        if (!reportIdToDelete) return;
+
+        const data = await dispatch(handleDeleteReport(reportIdToDelete));
+        if (data.payload.success) {
+            toast.success('تم حذف التقرير بنجاح');
+        } else {
+            toast.error(data.payload.message);
+        }
+
+        setShowDeleteModal(false); // Close the modal after deletion
+        setReportIdToDelete(null); // Reset the report ID
     };
 
     const changeCurrentPage = (page: number) => {
@@ -63,12 +82,12 @@ export default function ReportsTable() {
     const dispatch = useAppDispatch();
     const fetchData = async ({
         page = 1,
-        name = '',
+        classification = '',
         source = '',
         year = '',
         custom = '',
-    }: { page?: number, name?: string, source?: string, year?: string, custom?: string }) => {
-        await dispatch(handleGetAllReports({ page, name, source, year, custom }));
+    }: { page?: number, classification?: string, source?: string, year?: string, custom?: string }) => {
+        await dispatch(handleGetAllReports({ page, classification, source, year, custom }));
     };
 
     useEffect(() => {
@@ -90,20 +109,19 @@ export default function ReportsTable() {
         window.scrollTo(0, 0);
         fetchData({ page: 1 });
         dispatch(changeCurrentPath('رفع التقارير'));
-        console.log('ReportsTable',numberOfPages);
     }, []);
 
     const handleNameChange = (value: string) => {
-        fetchData({ name: value, source: selectedSource, year: selectedYear });
+        fetchData({ classification: value, source: selectedSource, year: selectedYear });
         setSelectedName(value);
     }
 
     const handleSourceChange = (value: string) => {
-        fetchData({ name: selectedName, source: value, year: selectedYear });
+        fetchData({ classification: selectedName, source: value, year: selectedYear });
         setSelectedSource(value);
     };
     const handleYearChange = (value: string) => {
-        fetchData({ name: selectedName, source: selectedSource, year: value });
+        fetchData({ classification: selectedName, source: selectedSource, year: value });
         setSelectedYear(value);
     }
     const handleKeyUp = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,7 +181,7 @@ export default function ReportsTable() {
                         </div>
                         <div className="flex col-span- items-center md:justify-end pb-3 sm:pb-4 justify-center gap-2">
                             <button
-                                onClick={() => navigete('/Dashboard/add-report')}
+                                onClick={() => navigate('/Dashboard/add-report')}
                                 className="text-black text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] transition-colors"
                                 title="اضافة تقرير"
                             >
@@ -171,7 +189,7 @@ export default function ReportsTable() {
                                 <span className=' sm:inline pe-2'>اضافة تقرير</span>
                             </button>
                             <button
-                                onClick={() => navigete('/Dashboard/add-reports')}
+                                onClick={() => navigate('/Dashboard/add-reports')}
                                 className="text-white  text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
                                 title="اضافة مجموعة تقارير"
                             >
@@ -292,6 +310,28 @@ export default function ReportsTable() {
                     </button>
                 </div>
             </div>
+            {showDeleteModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-xl font-bold mb-4">تأكيد الحذف</h2>
+                        <p className="mb-6">هل أنت متأكد أنك تريد حذف هذا التقرير ؟</p>
+                        <div className="grid grid-cols-2 gap-2 space-x-4">
+                            <button
+                                className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                                onClick={() => setShowDeleteModal(false)}
+                            >
+                                إلغاء
+                            </button>
+                            <button
+                                className="bg-red-500 text-white px-4 py-2 rounded"
+                                onClick={handleDeleteAction}
+                            >
+                                حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

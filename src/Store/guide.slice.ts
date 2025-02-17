@@ -37,12 +37,9 @@ const guideSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(handleGetAllGuides.fulfilled, (state, action) => {
             state.loading = false;
-            console.log(action.payload.guides.data)
-            
             if(!action.payload.guides.isFilled){
                 const temp = state.guides;
                 const newguides = action.payload.guides.data;
-    
                 state.guides = temp.concat(newguides.filter((newReport:Guide) =>
                     !temp.some(existingReport => existingReport._id === newReport._id)
                 ));
@@ -55,7 +52,6 @@ const guideSlice = createSlice({
             state.nameFilters = action.payload.guides.filterData.names;
             state.sourceFilters = action.payload.guides.filterData.sources;
             state.yearFilters = action.payload.guides.filterData.years;
-            console.log(state.sourceFilters)
         });
         builder.addCase(handleGetAllGuides.rejected, (state) => {
             state.loading = false;
