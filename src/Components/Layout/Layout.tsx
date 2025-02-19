@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiMenu, FiX, FiBell} from 'react-icons/fi';
+import { FiMenu, FiX} from 'react-icons/fi';
 import { Outlet, useNavigate } from 'react-router-dom';
 import logo from '../../assets/Images/Vector.png'
 import icon1 from '../../assets/Icons/DashBoard/icon1.png'
@@ -12,7 +12,6 @@ import { useAppDispatch } from '../../Store/store';
 import { changeActiveNav } from '../../Store/user.slice';
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
   const { currentPath, activeNumber } = useSelector((state: { user: { currentPath: string, activeNumber: number } }) => state.user);
 
   const navigate = useNavigate();
@@ -23,7 +22,8 @@ const Layout = () => {
     else if(num === 3) navigate('/Dashboard/articls');
     else if(num === 4) navigate('/Dashboard/governmentals');
     else if(num === 5) navigate('/Dashboard/statistics');
-    else if(num === 6) navigate('/Dashboard/settings');
+    else if(num === 6) navigate('/Dashboard/subscriber-management');
+    else if(num === 7) navigate('/Dashboard/settings');
     dispatch(changeActiveNav(num))
   };
   const logOut = () => {
@@ -58,39 +58,16 @@ const Layout = () => {
               <NavItem icon={icon3} text="رفع المقالات" func={()=>changeNav(3)} index={3} activeNumber={activeNumber}/>
               <NavItem icon={icon2} text="قائمة الجهات الحكومية" func={()=>changeNav(4)} index={4} activeNumber={activeNumber}/>
               <NavItem icon={icon3} text="إحصائيات المنصة" func={()=>changeNav(5)} index={5} activeNumber={activeNumber}/>
+              <NavItem icon={icon3} text="إدارة المشتركين" func={()=>changeNav(6)} index={6} activeNumber={activeNumber}/>
             </ul>
 
             <ul className="space-y-2 absolute bottom-10">
-              <NavItem icon={icon4} text="الاعدادات" func={()=>changeNav(6)} index={6} activeNumber={activeNumber}/>
-              <NavItem icon={icon5} text="تسجيل الخروج" func={logOut} index={7} activeNumber={activeNumber}/>
+              <NavItem icon={icon4} text="الاعدادات" func={()=>changeNav(7)} index={7} activeNumber={activeNumber}/>
+              <NavItem icon={icon5} text="تسجيل الخروج" func={logOut} index={8} activeNumber={activeNumber}/>
             </ul>
           </nav>
         </div>
       </aside>
-
-      {/* Notification Panel */}
-      <div
-        className={`fixed inset-y-0 left-0 w-80 bg-[#CBE1C7] shadow-lg transform transition-transform duration-300 ease-in-out z-40
-          ${isNoticeOpen ? 'translate-x-0' : '-translate-x-full'}`}
-      >
-        <div className="p-4">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-right">الإشعارات</h2>
-            <button
-              onClick={() => setIsNoticeOpen(false)}
-              className="text-gray-600"
-              title="Close Notifications"
-              aria-label="Close Notifications"
-            >
-              <FiX size={24} />
-            </button>
-          </div>
-          <div className="space-y-4">
-            <NotificationItem text="رسالة جديدة Received" time="منذ ساعتين" />
-            <NotificationItem text="تحديث النظام متاح" time="منذ 4 ساعات" />
-          </div>
-        </div>
-      </div>
 
       {/* Main Content */}
       <main className="md:mr-64 p-4">
@@ -104,15 +81,6 @@ const Layout = () => {
         <FiMenu size={24} />
       </button>
           <h1 className="text-2xl font-medium text-right">{currentPath}</h1>
-          
-          <button
-            onClick={() => setIsNoticeOpen(true)}
-            className="p-2 text-gray-600 hover:bg-gray-200 rounded-lg"
-            title="Open Notifications"
-            aria-label="Open Notifications"
-          >
-            <FiBell size={24} />
-          </button>
           
         </div>
         
@@ -155,19 +123,6 @@ const NavItem = ({ icon, text, func, index, activeNumber }: NavItemProps) => (
  }
  </>
   
-);
-
-// NotificationItem component
-interface NotificationItemProps {
-  text: string;
-  time: string;
-}
-
-const NotificationItem = ({ text, time }: NotificationItemProps) => (
-  <div className="p-3 bg-gray-50 rounded-lg text-right">
-    <p className="text-gray-600">{text}</p>
-    <p className="text-sm text-gray-400">{time}</p>
-  </div>
 );
 
 export default Layout;

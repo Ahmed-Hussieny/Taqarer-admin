@@ -100,10 +100,67 @@ export const HandleUpdateLoggedInPassword = createAsyncThunk("auth/HandleUpdateL
         return err.response.data;
     };
 });
+
+//^ getAllClientUsers
+export const HandleGetAllClientUsers = createAsyncThunk("auth/HandleGetAllClientUsers", async ({
+    page,
+    email
+}:{
+    page?: number,
+    email?: string
+}) => {
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/client-user/getAllClientUsers?page=${page}&email=${email}`,{
+            headers:{
+                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        const err = error as ApiErrorResponse;
+        return err.response.data;
+    };
+});
+
+//^ toggleUserVerification
+export const HandleToggleVerification = createAsyncThunk("auth/HandleToggleVerification", async (id: string) => {
+    try {
+        const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/client-user/toggleUserVerification/${id}`, null,{
+            headers:{
+                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        const err = error as ApiErrorResponse;
+        return err.response.data;
+    }
+});
+interface Package {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    duration: number;
+    createdAt: string;
+}
+interface ClientUser {
+    _id: string;
+    username: string;
+    email: string;
+    endDate: string;
+    isVerified: boolean;
+    subscribed: boolean;
+    startDate:string;
+    packageId: Package;
+    createdAt: string;
+}
 const userSlice = createSlice({
     name: "user",
     initialState: {
         user: [],
+        clientUsers:[] as ClientUser[],
         loading: false,
         error: null,
         currentPath : "",
@@ -196,6 +253,31 @@ const userSlice = createSlice({
             state.user = action.payload.userData;
         });
         builder.addCase(HandleUpdateLoggedInPassword.rejected, (state) => {
+            state.loading = false;
+        });
+
+        //^ HandleGetAllClientUsers
+        builder.addCase(HandleGetAllClientUsers.fulfilled, (state, action) => {
+            state.loading = false;
+            console.log(action.payload.users)
+            state.clientUsers = action.payload.users;
+        });
+        builder.addCase(HandleGetAllClientUsers.rejected, (state) => {
+            state.loading = false;
+        });
+
+        //^ HandleToggleVerification
+        builder.addCase(HandleToggleVerification.fulfilled, (state, action) => {
+            state.loading = false;
+            console.log(action.payload.user)
+            state.clientUsers = state.clientUsers.map(user => {
+                if(user._id === action.payload.user._id){
+                    return action.payload.user
+                }
+                return user
+            })
+        });
+        builder.addCase(HandleToggleVerification.rejected, (state) => {
             state.loading = false;
         });
     },

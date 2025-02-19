@@ -25,6 +25,8 @@ const AddGovernmentals = lazy(() => import('./Pages/Governmentals/AddGovernmenta
 const UpdateGovernmental = lazy(() => import('./Pages/Governmentals/UpdateGovernmental'));
 const AddGovernmental = lazy(() => import('./Pages/Governmentals/AddGovernmental'));
 const SettingsPage = lazy(() => import('./Pages/Settings/Settings'));
+const Statistics = lazy(() => import('./Pages/Statistics/Statistics'));
+const SubscriberManagement = lazy(() => import('./Pages/SubscriberManagement/SubscriberManagement'));
 
 const Loading = () => <div>Loading...</div>;
 
@@ -63,6 +65,8 @@ function App() {
         { path: '/Dashboard/edit-governmental/:governmentalId', element: <Suspense fallback={<Loading />}><UpdateGovernmental /></Suspense> },
         { path: '/Dashboard/add-governmental', element: <Suspense fallback={<Loading />}><AddGovernmental /></Suspense> },
         { path: '/Dashboard/settings', element: <Suspense fallback={<Loading />}><SettingsPage /></Suspense> },
+        { path: '/Dashboard/statistics', element: <Suspense fallback={<Loading />}><Statistics /></Suspense> },
+        { path: '/Dashboard/subscriber-management', element: <Suspense fallback={<Loading />}><SubscriberManagement /></Suspense> },
         { path: '/Dashboard/*', element: <div>Not Found</div> },
       ],
     },

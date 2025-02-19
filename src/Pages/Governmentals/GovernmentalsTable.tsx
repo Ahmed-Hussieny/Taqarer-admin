@@ -42,6 +42,7 @@ export default function GovernmentalsTable() {
             { value: '', label: 'الكل' },
             ...(classifications ? classifications.map((report: string) => ({ value: report, label: report })) : []),
         ]);
+        console.log(classifications,numberOfPages);
     }, [classifications]);
     
     const confirmDelete = async () => {

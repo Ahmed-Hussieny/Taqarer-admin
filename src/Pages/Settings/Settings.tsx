@@ -95,7 +95,7 @@ const SettingsPage = () => {
   const dispatch = useAppDispatch();
     useEffect(()=>{
       dispatch(changeCurrentPath('الاعدادات'));
-      dispatch(changeActiveNav(6));
+      dispatch(changeActiveNav(7));
     },[])
 
   return (

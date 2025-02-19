@@ -6,6 +6,7 @@ import reportReducer from './report.slice'
 import evidenceReducer from './evidence.slice'
 import governmentalReducer from './governmental.slice'
 import articleReducer from './article.slice'
+import statisticsReducer from './statistics.slice'
 export  const configStore = configureStore({
     reducer: {
         user: userReducer,
@@ -13,6 +14,7 @@ export  const configStore = configureStore({
         evidences: evidenceReducer,
         governmentals: governmentalReducer,
         articles: articleReducer,
+        Statistics: statisticsReducer,
     },
 })
 
