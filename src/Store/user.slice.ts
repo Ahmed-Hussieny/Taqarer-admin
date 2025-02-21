@@ -25,7 +25,7 @@ export const handleRegister = createAsyncThunk("auth/handleRegister", async (dat
 
 export const HandelVerifyEmail = createAsyncThunk("auth/HandelVerifyEmail", async (token: string) => {
     try {
-        const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/verifyEmail?userToken=${token}`);
+        const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/verifyEmail?authToken=${token}`);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -77,7 +77,7 @@ export const HandleUpdateLoggedInUser = createAsyncThunk("auth/HandleUpdateLogge
     try {
         const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/auth/updateLoggedInUser`, data,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -91,7 +91,7 @@ export const HandleUpdateLoggedInPassword = createAsyncThunk("auth/HandleUpdateL
     try {
         const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/auth/updateLoggedInUserPassword`, data,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -112,7 +112,7 @@ export const HandleGetAllClientUsers = createAsyncThunk("auth/HandleGetAllClient
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/client-user/getAllClientUsers?page=${page}&email=${email}`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -127,7 +127,7 @@ export const HandleToggleVerification = createAsyncThunk("auth/HandleToggleVerif
     try {
         const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/client-user/toggleUserVerification/${id}`, null,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;

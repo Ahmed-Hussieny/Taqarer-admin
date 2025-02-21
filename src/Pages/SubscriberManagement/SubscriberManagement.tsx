@@ -151,17 +151,26 @@ export default function SubscriberManagement() {
                                         {clientUser?.email}
                                     </td>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                        {clientUser?.subscribed ? <div className='p-2 bg-[#C0F7F0] rounded-lg'>مؤكد</div>: <div className='p-2 bg-[#FFD6D6] rounded-lg'>غير مؤكد</div>}
+                                        {clientUser?.isVerified ? <div className='p-2 bg-[#C0F7F0] rounded-lg'>مؤكد</div>: <div className='p-2 bg-[#FFD6D6] rounded-lg'>غير مؤكد</div>}
                                     </td>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                     الباقة {clientUser?.packageId.name}
+                                    {clientUser?.packageId?.name ? 
+                                    
+                                  <>  الباقة {clientUser?.packageId?.name}</>
+                                    :"___"}
                                     </td>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                       {clientUser?.packageId.price}  ريال  
+                                       
+                                       
+
+                                       {clientUser?.packageId?.price ? 
+                                    
+                                    <>  {clientUser?.packageId?.price}  ريال  </>
+                                      :"___"}
                                     </td>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                       <p>{clientUser?.startDate.split('T')[0]}</p>
-                                       <p>{clientUser?.endDate.split('T')[0]}</p>    
+                                       <p>{clientUser?.startDate?.split('T')[0]}</p>
+                                       <p>{clientUser?.endDate?.split('T')[0]}</p>    
                                        
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 w-40 text-sm text-gray-500 min-w-[200px]">

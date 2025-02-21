@@ -32,10 +32,10 @@ const Dropdown = ({
       <div className="dropdown-container relative text-black">
         <input type="hidden" value={selectedValue} />
         <div
-          className="dropdown-toggle cursor-pointer px-3 bg-white border border-[#D5DAE1] p-2 rounded-md flex items-center justify-between"
+          className="dropdown-toggle cursor-pointer px-3 bg-white border border-main_color p-2 rounded-md flex items-center justify-between"
           onClick={handleToggleDropdown}
         >
-          <span>{selectedValue || label}</span>
+          <span className="text-main_color">{selectedValue || label}</span>
           <span className="ml-2">
             {/* Arrow Icon */}
             <svg
@@ -57,7 +57,7 @@ const Dropdown = ({
           </span>
         </div>
         {isOpen && (
-          <div className="dropdown-menu absolute z-10 bg-white border border-gray-300 max-h-64 overflow-auto rounded-md mt-1 w-full">
+          <div className="dropdown-menu absolute z-10 bg-white border text-main_color  border-gray-300 max-h-64 overflow-auto rounded-md mt-1 w-full">
             <ul>
               {options.map((option) => (
                 <li

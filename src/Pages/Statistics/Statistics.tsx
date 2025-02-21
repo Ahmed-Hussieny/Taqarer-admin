@@ -7,10 +7,10 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 // Register required components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-import Dropdown from "../../Components/Custom/Dropdown";
 import { handleGetAllClassifications, handleGetAllNumberOfReportsForClassification, handleGetAllNumberOfReportsForSourses, handleGetAllSource, handleGetgetReportsCountersBetweenYears, handleGetMostRepeatedClassification, handleGetMostRepeatedSource, handleGetReportsChartData, handleGetTop5RepeatedClassifications, handleGetTop5RepeatedSources } from "../../Store/statistics.slice";
 import { useSelector } from "react-redux";
 import YearRangeSelector from "../../Components/Custom/DropdownYear";
+import DropdownT from "../../Components/Custom/DropdownT";
 interface DropdownItem {
     value: string;
     label: string;
@@ -99,6 +99,9 @@ export default function Statistics() {
 
     const fetchData = async () => {
         await dispatch(handleGetAllClassifications());
+        const data = await dispatch(handleGetAllNumberOfReportsForClassification({ classification: '' }));
+        console.log(data);
+        await dispatch(handleGetAllNumberOfReportsForSourses({ source: '' }));
         await dispatch(handleGetAllSource());
         await dispatch(handleGetReportsChartData());
         await dispatch(handleGetMostRepeatedClassification());
@@ -114,27 +117,27 @@ export default function Statistics() {
     return (
         <div>
             <div className="grid md:grid-cols-3 grid-cols-1">
-                <div>
-                    <Dropdown
+                <div className="">
+                    <DropdownT
                         label="التصنيف"
                         options={classificationOptions}
                         selectedValue={selectedClassification}
                         onChange={handleClassificationChange}
                     />
-                    <div className="bg-white m-3 py-2 text-center rounded-lg shadow-lg">
+                    <div className="bg-white mt-2 py-2 text-center rounded-lg shadow-lg">
                         <p className="text-lg text-[#575a5e] font-bold">عدد التقارير</p>
                         <p className="text-4xl mt-2 text-[#202224] font-bold">{numberOfClassifications || 0}</p>
                     </div>
 
                 </div>
-                <div>
-                    <Dropdown
-                        label="التصنيف"
+                <div className="ms-2">
+                    <DropdownT
+                        label="المصدر"
                         options={sourceOptions}
                         selectedValue={selectedSource}
                         onChange={handleSourceChange}
                     />
-                    <div className="bg-white m-3 py-2 text-center rounded-lg shadow-lg">
+                    <div className="bg-white mt-2 py-2 text-center rounded-lg shadow-lg">
                         <p className="text-lg text-[#575a5e] font-bold">عدد التقارير</p>
                         <p className="text-4xl mt-2 text-[#202224] font-bold">{numberOfSourses || 0}</p>
                     </div>
@@ -142,9 +145,10 @@ export default function Statistics() {
                 <div>
 
                     <div className="p4">
+                        <label className="block text-gray-700 ">{"العام"}</label>
                         <YearRangeSelector onYearChange={handleYearChange} />
                     </div>
-                    <div className="bg-white m-3 py-2 text-center rounded-lg shadow-lg">
+                    <div className="bg-white m-2 py-2 text-center rounded-lg shadow-lg">
                         <p className="text-lg text-[#575a5e] font-bold">عدد التقارير</p>
                         <p className="text-4xl mt-2 text-[#202224] font-bold">{numberOfReportsBetweenYears || 0}</p>
                     </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiMenu, FiX} from 'react-icons/fi';
 import { Outlet, useNavigate } from 'react-router-dom';
 import logo from '../../assets/Images/Vector.png'
@@ -23,13 +23,20 @@ const Layout = () => {
     else if(num === 4) navigate('/Dashboard/governmentals');
     else if(num === 5) navigate('/Dashboard/statistics');
     else if(num === 6) navigate('/Dashboard/subscriber-management');
-    else if(num === 7) navigate('/Dashboard/settings');
+    else if(num === 7) navigate('/Dashboard/Subscribtion');
+    else if(num === 8) navigate('/Dashboard/settings');
     dispatch(changeActiveNav(num))
   };
   const logOut = () => {
     localStorage.clear();
     navigate('/');
   }
+
+  useEffect(() => {
+    if(localStorage.getItem('authToken') === null){
+      navigate('/');
+    }
+  }, []);
   return (
     <div className="min-h-screen bg-gray-100" dir="rtl">
       {/* Sidebar */}
@@ -59,10 +66,11 @@ const Layout = () => {
               <NavItem icon={icon2} text="قائمة الجهات الحكومية" func={()=>changeNav(4)} index={4} activeNumber={activeNumber}/>
               <NavItem icon={icon3} text="إحصائيات المنصة" func={()=>changeNav(5)} index={5} activeNumber={activeNumber}/>
               <NavItem icon={icon3} text="إدارة المشتركين" func={()=>changeNav(6)} index={6} activeNumber={activeNumber}/>
+              <NavItem icon={icon3} text="الاشتركات" func={()=>changeNav(7)} index={7} activeNumber={activeNumber}/>
             </ul>
 
             <ul className="space-y-2 absolute bottom-10">
-              <NavItem icon={icon4} text="الاعدادات" func={()=>changeNav(7)} index={7} activeNumber={activeNumber}/>
+              <NavItem icon={icon4} text="الاعدادات" func={()=>changeNav(8)} index={8} activeNumber={activeNumber}/>
               <NavItem icon={icon5} text="تسجيل الخروج" func={logOut} index={8} activeNumber={activeNumber}/>
             </ul>
           </nav>

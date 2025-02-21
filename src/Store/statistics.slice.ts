@@ -5,7 +5,7 @@ export const handleGetAllClassifications = createAsyncThunk("statistic/handleGet
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getReportsClassification`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -20,9 +20,10 @@ export const handleGetAllNumberOfReportsForClassification = createAsyncThunk("st
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getReportsCountersForClassification?classification=${classification}`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
+        console.log(response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -34,7 +35,7 @@ export const handleGetAllSource= createAsyncThunk("statistic/handleGetAllSource"
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getReportsSource`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -49,7 +50,7 @@ export const handleGetAllNumberOfReportsForSourses = createAsyncThunk("statistic
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getReportsCountersForSource?source=${source}`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -68,7 +69,7 @@ export const handleGetgetReportsCountersBetweenYears = createAsyncThunk("statist
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getReportsCountersBetweenYears?startYear=${startYear}&endYear=${endYear}`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -83,7 +84,7 @@ export const handleGetReportsChartData = createAsyncThunk("statistic/handleGetRe
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getReportsChartData`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -98,7 +99,7 @@ export const handleGetMostRepeatedClassification = createAsyncThunk("statistic/h
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getMostRepeatedClassification`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -112,7 +113,7 @@ export const handleGetTop5RepeatedClassifications = createAsyncThunk("statistic/
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getTop5RepeatedClassifications`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -126,7 +127,7 @@ export const handleGetMostRepeatedSource = createAsyncThunk("statistic/handleGet
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getMostRepeatedSource`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -140,7 +141,7 @@ export const handleGetTop5RepeatedSources = createAsyncThunk("statistic/handleGe
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/getTop5RepeatedSources`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;

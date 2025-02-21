@@ -27,7 +27,8 @@ const AddGovernmental = lazy(() => import('./Pages/Governmentals/AddGovernmental
 const SettingsPage = lazy(() => import('./Pages/Settings/Settings'));
 const Statistics = lazy(() => import('./Pages/Statistics/Statistics'));
 const SubscriberManagement = lazy(() => import('./Pages/SubscriberManagement/SubscriberManagement'));
-
+const Subscribtion = lazy(() => import('./Pages/Subscribtion/Subscribtion'));
+const AddSubscription = lazy(() => import('./Pages/Subscribtion/AddSubscribtion'));
 const Loading = () => <div>Loading...</div>;
 
 function App() {
@@ -67,6 +68,8 @@ function App() {
         { path: '/Dashboard/settings', element: <Suspense fallback={<Loading />}><SettingsPage /></Suspense> },
         { path: '/Dashboard/statistics', element: <Suspense fallback={<Loading />}><Statistics /></Suspense> },
         { path: '/Dashboard/subscriber-management', element: <Suspense fallback={<Loading />}><SubscriberManagement /></Suspense> },
+        { path: '/Dashboard/Subscribtion', element: <Suspense fallback={<Loading />}><Subscribtion /></Suspense> },
+        { path: '/Dashboard/add-subscription', element: <Suspense fallback={<Loading />}><AddSubscription /></Suspense> },
         { path: '/Dashboard/*', element: <div>Not Found</div> },
       ],
     },

@@ -95,8 +95,8 @@ const SettingsPage = () => {
   const dispatch = useAppDispatch();
     useEffect(()=>{
       dispatch(changeCurrentPath('الاعدادات'));
-      dispatch(changeActiveNav(7));
-    },[])
+      dispatch(changeActiveNav(8));
+    },[]);
 
   return (
     <div className=" " dir="rtl">

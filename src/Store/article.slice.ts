@@ -20,7 +20,7 @@ export const handleAddArticle = createAsyncThunk("article/handleAddArticle", asy
     try {
         const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/article/add-article`, apiData,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -34,7 +34,7 @@ export const handleDeleteArticle = createAsyncThunk("guide/handleDeleteArticle",
     try {
         const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/article/delete-article/${id}`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -60,7 +60,7 @@ export const handleUpdateArticle = createAsyncThunk("guide/handleUpdateArticle",
     try {
         const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/article/update-article/${id}`, apiData,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;

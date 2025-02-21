@@ -33,7 +33,7 @@ export const handleAddEvidence = createAsyncThunk("guide/handleAddEvidence", asy
     try {
         const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/guide/addSingleGuide`,apiData,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -48,7 +48,7 @@ export const handleUpdateEvidence = createAsyncThunk("guide/handleUpdateEvidence
     try {
         const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/guide/updateGuide/${id}`,apiData,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -63,7 +63,7 @@ export const handleAddEvidences = createAsyncThunk("guide/handleAddEvidences", a
     try {
         const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/guide/addGuidesFromExcel`,apiData,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -77,7 +77,7 @@ export const handleDeleteEvidence = createAsyncThunk("guide/handleDeleteEvidence
     try {
         const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/guide/deleteGuide/${id}`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -94,7 +94,7 @@ export const handelDownloadEvidence = createAsyncThunk(
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/guide/downloadGuide/${id}`, {
           responseType: "blob", // Ensures we get binary data (PDF)
           headers:{
-            accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+            accesstoken: `Bearer_${localStorage.getItem("authToken")}`
         }
         });
   

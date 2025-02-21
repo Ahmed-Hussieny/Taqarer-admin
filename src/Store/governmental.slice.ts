@@ -22,7 +22,7 @@ export const handleAddGovernmental = createAsyncThunk("governmental/handleAddGov
     try {
         const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/governmental/addSingleGovernmental`, apiData,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`,
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`,
                 "Content-Type": "multipart/form-data",
             }
         });
@@ -37,7 +37,7 @@ export const handleDeleteGovernmental = createAsyncThunk("governmental/handleDel
     try {
         const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/governmental/deleteGovernmental/${id}`,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -51,7 +51,7 @@ export const handleAddGovernmentals = createAsyncThunk("governmental/handleAddGo
     try {
         const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/governmental/addGovernmentalsFromExcel`, apiData,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
@@ -71,7 +71,7 @@ export const handleUpdateGovernmental = createAsyncThunk("governmental/handleUpd
     try {
         const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/governmental/updateGovernmental/${id}`,apiData,{
             headers:{
-                accesstoken: `Bearer_${localStorage.getItem("userToken")}`
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
         return response.data;
