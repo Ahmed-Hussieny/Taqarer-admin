@@ -117,6 +117,23 @@ export const handelDownloadReport = createAsyncThunk(
     }
   );
   
+  interface ClassificationI {
+    classification: string;
+    sources: string[];
+    years: string[];
+  };
+
+  interface SourceI {
+    classification: string[];
+    source: string;
+    years: string[];
+  };
+
+  interface YearI {
+    classification: string[];
+    source: string;
+    years: string[];
+  };
 
 const reportSlice = createSlice({
     name: "report",
@@ -125,24 +142,86 @@ const reportSlice = createSlice({
         nameFilters: [] as string[],
         sourceFilters: [] as string[],
         yearFilters: [] as string[],
+        originalNames: [] as string[],
+        originalSources: [] as string[],
+        originalYears: [] as string[],
         numberOfPages: 0,
         loading: false,
+        classificationRelationships: [] as ClassificationI[],
+        sourceRelationships: [] as SourceI[],
+        yearRelationships: [] as YearI[],
         error: null,
     },
     reducers: {
         getClincsRequest(state) {
             state.loading = true;
+        },
+        classificationChange(state, action) {
+            if(action.payload === "") {
+                state.sourceFilters = state.originalSources;
+                state.yearFilters = state.originalYears;
+                return;
+            }
+            state.sourceFilters = state.classificationRelationships.find(
+                c => c.classification === action.payload
+            )?.sources || [];
+
+            state.yearFilters = state.classificationRelationships.find(
+                c => c.classification === action.payload
+            )?.years || [];
+        },
+        
+        sourceChange(state, action) {
+            if (action.payload === "") {
+                state.yearFilters = state.originalYears;
+                return;
+            }
+        
+            // const filteredClassifications = state.classificationRelationships.filter(
+            //     c => c.sources.includes(action.payload)
+            // );
+        
+            // state.yearFilters = [...new Set(filteredClassifications.flatMap(c => c.years))];
+        
+            // // Ensure classification is updated accordingly
+            // state.nameFilters = [...new Set(filteredClassifications.map(c => c.classification))];
+            // state.reports = state.reports.filter(report => report.source === action.payload);
+        },
+        
+        yearChange(state, action) {
+            if (action.payload === "") {
+                state.sourceFilters = state.originalSources;
+                return;
+            }
+        
+            // const filteredClassifications = state.classificationRelationships.filter(
+            //     c => c.years.includes(action.payload)
+            // );
+        
+            // state.sourceFilters = [...new Set(filteredClassifications.flatMap(c => c.sources))];
+        
+            // // Ensure classification is updated accordingly
+            // state.nameFilters = [...new Set(filteredClassifications.map(c => c.classification))];
+            // state.reports = state.reports.filter(report => report.year === action.payload);
         }
+        
     },
     extraReducers: (builder) => {
         builder.addCase(handleGetAllReports.fulfilled, (state, action) => {
             state.loading = false;
+            if(action.payload.reports.filterData?.classifications){
+                state.nameFilters = action.payload.reports.filterData.classifications;
+            }
+            if(action.payload.reports.filterData?.sources){
+                state.sourceFilters = action.payload.reports.filterData.sources;
+            }
+            if(action.payload.reports.filterData?.years){
+                state.yearFilters = action.payload.reports.filterData.years;
+            }
             state.reports = action.payload.reports.data;
-            state.numberOfPages = action.payload.reports.totalPages;
-            state.nameFilters = action.payload.reports.filterData.classification;
-            state.sourceFilters = action.payload.reports.filterData.sources;
-            state.yearFilters = action.payload.reports.filterData.years;
+            state.numberOfPages = action.payload.totalPages;
         });
+    
         builder.addCase(handleGetAllReports.rejected, (state) => {
             state.loading = false;
         });
@@ -197,3 +276,4 @@ const reportSlice = createSlice({
 });
 
 export default reportSlice.reducer;
+export const { getClincsRequest, classificationChange, sourceChange, yearChange } = reportSlice.actions;

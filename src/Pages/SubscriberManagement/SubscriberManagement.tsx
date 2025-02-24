@@ -7,26 +7,26 @@ import pin from '../../assets/Icons/DashBoard/Pin.svg';
 import { useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 interface Package {
-    _id: string;
-    name: string;
-    description: string;
-    price: number;
-    duration: number;
-    createdAt: string;
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  duration: number;
+  createdAt: string;
 }
 interface ClientUser {
-    _id: string;
-    username: string;
-    email: string;
-    endDate: string;
-    isVerified: boolean;
-    subscribed: boolean;
-    startDate:string;
-    packageId: Package;
-    createdAt: string;
+  _id: string;
+  username: string;
+  email: string;
+  endDate: string;
+  isVerified: boolean;
+  subscribed: boolean;
+  startDate: string;
+  packageId: Package;
+  createdAt: string;
 }
 export default function SubscriberManagement() {
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const { clientUsers, numberOfPages } = useSelector((state: { user: { clientUsers: ClientUser[], numberOfPages: number } }) => state.user);
@@ -54,12 +54,12 @@ export default function SubscriberManagement() {
     dispatch(changeActiveNav(6));
   }, []);
 
-  const toggleVerifyUser = async (id:string) => {
+  const toggleVerifyUser = async (id: string) => {
     const data = await dispatch(HandleToggleVerification(id));
-    if(data.payload.user.isVerified){
-        toast.success('تم تفعيل المشترك');
-    }else{
-        toast.success('تم تعليق المشترك')
+    if (data.payload.user.isVerified) {
+      toast.success('تم تفعيل المشترك');
+    } else {
+      toast.success('تم تعليق المشترك')
     }
   };
 
@@ -67,9 +67,9 @@ export default function SubscriberManagement() {
     <div>
       {/* Items per page selector */}
       <Toaster
-            position="top-center"
-            reverseOrder={false}
-            />
+        position="top-center"
+        reverseOrder={false}
+      />
       <div className='grid md:grid-cols-3 grid-cols-1 mb-4 gap-2'>
         {/* Left Section - Search & Pagination */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 sm:p-4 rounded-lg">
@@ -100,82 +100,74 @@ export default function SubscriberManagement() {
             </form>
           </div>
           <div className="flex col-span- items-center md:justify-end pb-3 sm:pb-4 justify-center gap-2">
-            {/* <button
-              onClick={() => navigate('/Dashboard/add-article')}
-              className="text-white md:w-auto md:px-9 w-full text-sm flex justify-center items-center gap-1 rounded-lg py-2 hover:bg-green-600 bg-[#3D9635] transition-colors"
-              title="اضافة مشترك"
-            >
-              <img src={plus2} alt='plus2' className="w-4 h-4" />
-              <span className=' sm:inline pe-2'>اضافة مشترك</span>
-            </button> */}
           </div>
         </div>
       </div>
       {/* <EvidencesTable /> */}
       <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                    {/* Table */}
-                    <table className="min-w-full divide-y border-separate">
-                        <thead className="bg-[#EAF7E8]">
-                            <tr>
-                                <th scope="col" className="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 sm:pl-6">
-                                    اسم المشترك
-                                </th>
-                                <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[90px]">
-                                     ايميل المشترك   
-                                </th>
-                                <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[px]">
-                                التحقق
-                                </th>
-                                <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[px]">
-                                نوع الاشتراك
-                                </th>
-                                <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[px]">
-                                قيمة الاشتراك
-                                </th>
-                                <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[px]">
-                                مدة الاشتراك
-                                </th>
-                                <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[200px]">
-                                    خيارات
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200 bg-white">
-                            {clientUsers?.map((clientUser) => (
-                                <tr key={clientUser?._id}>
-                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                        {clientUser?.username}
-                                    </td>
-                                    {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{governmental?.classification}</td> */}
-                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                        {clientUser?.email}
-                                    </td>
-                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                        {clientUser?.isVerified ? <div className='p-2 bg-[#C0F7F0] rounded-lg'>مؤكد</div>: <div className='p-2 bg-[#FFD6D6] rounded-lg'>غير مؤكد</div>}
-                                    </td>
-                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                    {clientUser?.packageId?.name ? 
-                                    
-                                  <>  الباقة {clientUser?.packageId?.name}</>
-                                    :"___"}
-                                    </td>
-                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                       
-                                       
+        {/* Table */}
+        <table className="min-w-full divide-y border-separate">
+          <thead className="bg-[#EAF7E8]">
+            <tr>
+              <th scope="col" className="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 sm:pl-6">
+                اسم المشترك
+              </th>
+              <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[90px]">
+                ايميل المشترك
+              </th>
+              <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[px]">
+                التحقق
+              </th>
+              <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[px]">
+                نوع الاشتراك
+              </th>
+              <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[px]">
+                قيمة الاشتراك
+              </th>
+              <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[px]">
+                مدة الاشتراك
+              </th>
+              <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 min-w-[200px]">
+                خيارات
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {clientUsers?.map((clientUser) => (
+              <tr key={clientUser?._id}>
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
+                  {clientUser?.username}
+                </td>
+                {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{governmental?.classification}</td> */}
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
+                  {clientUser?.email}
+                </td>
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
+                  {clientUser?.isVerified ? <div className='p-2 bg-[#C0F7F0] rounded-lg'>مؤكد</div> : <div className='p-2 bg-[#FFD6D6] rounded-lg'>غير مؤكد</div>}
+                </td>
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
+                  {clientUser?.packageId?.name ?
 
-                                       {clientUser?.packageId?.price ? 
-                                    
-                                    <>  {clientUser?.packageId?.price}  ريال  </>
-                                      :"___"}
-                                    </td>
-                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
-                                       <p>{clientUser?.startDate?.split('T')[0]}</p>
-                                       <p>{clientUser?.endDate?.split('T')[0]}</p>    
-                                       
-                                    </td>
-                                    <td className="whitespace-nowrap px-3 py-4 w-40 text-sm text-gray-500 min-w-[200px]">
-                                        <div className="flex items-center gap-2">
-                                            {/* <button
+                    <>  الباقة {clientUser?.packageId?.name}</>
+                    : "___"}
+                </td>
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
+
+
+
+                  {clientUser?.packageId?.price ?
+
+                    <>  {clientUser?.packageId?.price}  ريال  </>
+                    : "___"}
+                </td>
+                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-900 sm:pl-6">
+                  <p>{clientUser?.startDate?.split('T')[0]}</p>
+                  <p>{clientUser?.endDate?.split('T')[0]}</p>
+
+                </td>
+                <td className="whitespace-nowrap px-3 py-4 w-40 text-sm text-gray-500 min-w-[200px]">
+                  <div className="flex items-center gap-2">
+                    {/* <button
                                                 // onClick={() => handleAction(clientUser._id, 'edit')}
                                                 className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#F7F8F9] whitespace-nowrap"
                                                 title="تعديل"
@@ -183,38 +175,38 @@ export default function SubscriberManagement() {
                                                 <img src={editIcon} alt="edit" className="w-4 h-4" />
                                                 <span>تعديل</span>
                                             </button> */}
-                                            {clientUser.isVerified ? <button
-                                                onClick={() => toggleVerifyUser(clientUser._id)}
-                                                className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
-                                                title="تعليق"
-                                            >
-                                                <img src={pin} alt="pin" className="w-4 h-4" />
-                                                <span>تعليق</span>
-                                            </button>
-                                            :<button
-                                            onClick={() => toggleVerifyUser(clientUser._id)}
-                                            className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
-                                            title="تفعيل"
-                                        >
-                                            <img src={pin} alt="pin" className="w-4 h-4" />
-                                            <span>تفعيل</span>
-                                        </button>}
-                                            
-                                            {/* pin */}
-                                            <button
-                                                // onClick={() => handleAction(clientUser._id, 'delete')}
-                                                className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
-                                                title="حذف"
-                                            >
-                                                <img className="w-4 h-4" src={deleteIcon} alt="delete" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                    {clientUser.isVerified ? <button
+                      onClick={() => toggleVerifyUser(clientUser._id)}
+                      className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
+                      title="تعليق"
+                    >
+                      <img src={pin} alt="pin" className="w-4 h-4" />
+                      <span>تعليق</span>
+                    </button>
+                      : <button
+                        onClick={() => toggleVerifyUser(clientUser._id)}
+                        className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
+                        title="تفعيل"
+                      >
+                        <img src={pin} alt="pin" className="w-4 h-4" />
+                        <span>تفعيل</span>
+                      </button>}
+
+                    {/* pin */}
+                    <button
+                      // onClick={() => handleAction(clientUser._id, 'delete')}
+                      className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
+                      title="حذف"
+                    >
+                      <img className="w-4 h-4" src={deleteIcon} alt="delete" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="flex justify-center items-center mt-8 mb-4" dir="rtl">
         {/* Next Button (left side in RTL) */}
 
@@ -233,8 +225,8 @@ export default function SubscriberManagement() {
               key={index + 1}
               onClick={() => changeCurrentPage(index + 1)}
               className={`px-3 py-1 flex items-center justify-center ${currentPage === index + 1
-                  ? 'bg-[#BBC3CF]  text-black border'
-                  : 'text-black bg-[#F7F8F9] border border-1/2 border-slate-300'
+                ? 'bg-[#BBC3CF]  text-black border'
+                : 'text-black bg-[#F7F8F9] border border-1/2 border-slate-300'
                 }`}
               aria-label={`الصفحة ${index + 1}`}
             >

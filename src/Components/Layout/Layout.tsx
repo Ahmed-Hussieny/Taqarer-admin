@@ -59,7 +59,7 @@ const Layout = () => {
                 <img  src={logo} alt='logo'/>
             </div>
             
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               <NavItem icon={icon1} text="رفع التقارير" func={()=>changeNav(1)} index={1} activeNumber={activeNumber} />
               <NavItem icon={icon2} text="رفع الادلة المعرفية" func={()=>changeNav(2)} index={2} activeNumber={activeNumber}/>
               <NavItem icon={icon3} text="رفع المقالات" func={()=>changeNav(3)} index={3} activeNumber={activeNumber}/>
@@ -69,9 +69,9 @@ const Layout = () => {
               <NavItem icon={icon3} text="الاشتركات" func={()=>changeNav(7)} index={7} activeNumber={activeNumber}/>
             </ul>
 
-            <ul className="space-y-2 absolute bottom-10">
+            <ul className="space-y-1 absolute bottom-3">
               <NavItem icon={icon4} text="الاعدادات" func={()=>changeNav(8)} index={8} activeNumber={activeNumber}/>
-              <NavItem icon={icon5} text="تسجيل الخروج" func={logOut} index={8} activeNumber={activeNumber}/>
+              <NavItem icon={icon5} text="تسجيل الخروج" func={logOut} index={9} activeNumber={activeNumber}/>
             </ul>
           </nav>
         </div>

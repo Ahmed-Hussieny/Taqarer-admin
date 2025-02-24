@@ -10,7 +10,6 @@ export const handleGetAllGovernmentals = createAsyncThunk("governmental/handleGe
 }: { page: number, name?: string, classification?: string }) => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/governmental/GetALLGovernmentals?page=${page}&classification=${classification}&name=${name}`);
-        console.log(response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -26,6 +25,7 @@ export const handleAddGovernmental = createAsyncThunk("governmental/handleAddGov
                 "Content-Type": "multipart/form-data",
             }
         });
+        console.log(response.data)
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;

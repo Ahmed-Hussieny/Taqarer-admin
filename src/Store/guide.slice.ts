@@ -37,21 +37,17 @@ const guideSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(handleGetAllGuides.fulfilled, (state, action) => {
             state.loading = false;
-            if(!action.payload.guides.isFilled){
-                const temp = state.guides;
-                const newguides = action.payload.guides.data;
-                state.guides = temp.concat(newguides.filter((newReport:Guide) =>
-                    !temp.some(existingReport => existingReport._id === newReport._id)
-                ));
+            if(action.payload.guides.filterData?.classifications){
+                state.nameFilters = action.payload.guides.filterData.classifications;
             }
-            else{
-                state.guides = action.payload.guides.data;
+            if(action.payload.guides.filterData?.sources){
+                state.sourceFilters = action.payload.guides.filterData.sources;
             }
-            
-            state.numberOfPages = action.payload.guides.numberOfPages;
-            state.nameFilters = action.payload.guides.filterData.names;
-            state.sourceFilters = action.payload.guides.filterData.sources;
-            state.yearFilters = action.payload.guides.filterData.years;
+            if(action.payload.guides.filterData?.years){
+                state.yearFilters = action.payload.guides.filterData.years;
+            }
+            state.guides = action.payload.guides.data;
+            state.numberOfPages = action.payload.totalPages;
         });
         builder.addCase(handleGetAllGuides.rejected, (state) => {
             state.loading = false;

@@ -23,7 +23,6 @@ export const handleGetAllNumberOfReportsForClassification = createAsyncThunk("st
                 accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -236,7 +235,6 @@ const statisticsSlice = createSlice({
         });
         //^ handleGetTop5RepeatedClassifications
         builder.addCase(handleGetTop5RepeatedClassifications.fulfilled, (state, action) => {
-            console.log(action.payload.data);
             state.mostRepeted5Classifications = action.payload.data;
             state.loading = false;
         });
@@ -254,7 +252,6 @@ const statisticsSlice = createSlice({
         });
         //^ handleGetTop5RepeatedSources
         builder.addCase(handleGetTop5RepeatedSources.fulfilled, (state, action) => {
-            console.log(action.payload.data);
             state.mostRepeted5Sources = action.payload.data;
             state.loading = false;
         });

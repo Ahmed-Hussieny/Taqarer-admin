@@ -67,7 +67,6 @@ export default function Statistics() {
 
     //^ year Selector 
     const handleYearChange = async (startYear: string, endYear: string) => {
-        console.log(startYear, endYear);
         await dispatch(handleGetgetReportsCountersBetweenYears({ startYear, endYear }));
     };
 
@@ -99,8 +98,7 @@ export default function Statistics() {
 
     const fetchData = async () => {
         await dispatch(handleGetAllClassifications());
-        const data = await dispatch(handleGetAllNumberOfReportsForClassification({ classification: '' }));
-        console.log(data);
+        await dispatch(handleGetAllNumberOfReportsForClassification({ classification: '' }));
         await dispatch(handleGetAllNumberOfReportsForSourses({ source: '' }));
         await dispatch(handleGetAllSource());
         await dispatch(handleGetReportsChartData());
@@ -161,7 +159,7 @@ export default function Statistics() {
             <div className="grid md:grid-cols-2 gap-4 mt-3 grid-cols-1">
                 <div className="bg-white p-4 rounded-lg">
                     <p className="font-bold">المصادر الاعلى تقارير</p>
-                    <div className="grid grid-cols-3 text-center border-b-2 pb-2">
+                    <div className="grid grid-cols-3 gap-2 text-center border-b-2 pb-2">
                         {mostRepeted5Classifications.map((classification, index) => (
                             <div className="bg-[#F7F8F9] px-2 text-sm py-1 rounded-lg" key={index}>
                                 {classification._id}
@@ -177,7 +175,7 @@ export default function Statistics() {
 
                 <div className="bg-white p-4 rounded-lg">
                     <p className="font-bold">المصادر الاعلى تقارير</p>
-                    <div className="grid grid-cols-3 text-center border-b-2 pb-2">
+                    <div className="grid grid-cols-3 gap-2 text-center border-b-2 pb-2">
                         {mostRepeted5Sources.map((source, index) => (
                             <div className="bg-[#F7F8F9] px-2 text-sm py-1 rounded-lg" key={index}>
                                 {source._id}

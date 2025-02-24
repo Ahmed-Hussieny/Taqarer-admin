@@ -259,7 +259,6 @@ const userSlice = createSlice({
         //^ HandleGetAllClientUsers
         builder.addCase(HandleGetAllClientUsers.fulfilled, (state, action) => {
             state.loading = false;
-            console.log(action.payload.users)
             state.clientUsers = action.payload.users;
         });
         builder.addCase(HandleGetAllClientUsers.rejected, (state) => {
@@ -269,7 +268,6 @@ const userSlice = createSlice({
         //^ HandleToggleVerification
         builder.addCase(HandleToggleVerification.fulfilled, (state, action) => {
             state.loading = false;
-            console.log(action.payload.user)
             state.clientUsers = state.clientUsers.map(user => {
                 if(user._id === action.payload.user._id){
                     return action.payload.user

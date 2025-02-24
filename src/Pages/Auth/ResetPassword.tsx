@@ -15,7 +15,6 @@ const ResetPassword = () => {
 
     const { token } = useParams();
     useEffect(() => {
-        console.log(token);
         const verifyToken = async () => {
             if (!token) {
                 setLoading(false);
@@ -25,7 +24,6 @@ const ResetPassword = () => {
             }
             setLoading(true);
             const data = await dispatch(HandelVerifyResetCode({ token }));
-            console.log(data)
             if (data.payload.success) {
                 toast.success('تم التحقق من الرمز بنجاح');
             } else {

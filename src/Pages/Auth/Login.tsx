@@ -31,7 +31,7 @@ export default function Login() {
             setLoading(true);
             const data = await dispatch(handleLogin(values));
             if (data.payload.success) {
-                localStorage.setItem('authToken', data.payload.authToken);
+                localStorage.setItem('authToken', data.payload.userData.token);
                 toast.success('تم تسجيل الدخول بنجاح');
                 setTimeout(() => {
                     navigate('/Dashboard');

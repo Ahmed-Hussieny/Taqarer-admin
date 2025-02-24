@@ -137,11 +137,17 @@ const evidenceSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(handleGetAllEvidences.fulfilled, (state, action) => {
             state.loading = false;
+            if(action.payload.guides.filterData?.classifications){
+                state.classifications = action.payload.guides.filterData.classifications;
+            }
+            if(action.payload.guides.filterData?.sources){
+                state.sourceFilters = action.payload.guides.filterData.sources;
+            }
+            if(action.payload.guides.filterData?.years){
+                state.yearFilters = action.payload.guides.filterData.years;
+            }
             state.evidences = action.payload.guides.data;
-            state.numberOfPages = action.payload.guides.totalPages;
-            state.classifications = action.payload.guides.filterData.classifications;
-            state.sourceFilters = action.payload.guides.filterData.sources;
-            state.yearFilters = action.payload.guides.filterData.years;
+            state.numberOfPages = action.payload.totalPages;
         });
         builder.addCase(handleGetAllEvidences.rejected, (state) => {
             state.loading = false;

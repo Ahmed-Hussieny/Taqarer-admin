@@ -38,7 +38,6 @@ const AddSubscribtion: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
   const handleSubmit = async (values: typeof initialValues) => {
-    console.log(values);
     const data =  await dispatch(handleAddPackage(values));
     if(data.payload.success){
         toast.success('تمت العملية بنجاح');

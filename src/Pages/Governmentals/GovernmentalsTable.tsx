@@ -42,7 +42,6 @@ export default function GovernmentalsTable() {
             { value: '', label: 'الكل' },
             ...(classifications ? classifications.map((report: string) => ({ value: report, label: report })) : []),
         ]);
-        console.log(classifications,numberOfPages);
     }, [classifications]);
     
     const confirmDelete = async () => {
@@ -169,8 +168,9 @@ export default function GovernmentalsTable() {
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {governmentals?.map((governmental) => (
                                 <tr key={governmental?._id}>
-                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                        {governmental?.name}
+                                    <td className="whitespace-nowrap flex justify-between py-4 pl-4 pr-3 items-center text-sm font-medium text-gray-900 sm:pl-6">
+                                        <p>{governmental?.name}</p>
+                                        <img src={governmental?.image} alt='logo' className="w-32 h-12 inline-block rounded-full" />
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{governmental?.classification}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 min-w-[150px]">

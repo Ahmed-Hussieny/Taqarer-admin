@@ -6,7 +6,7 @@ import plus from '../../assets/Icons/DashBoard/plus.svg'
 import plus2 from '../../assets/Icons/DashBoard/plus2.svg'
 import Dropdown from '../../Components/Custom/Dropdown';
 import { useAppDispatch } from '../../Store/store';
-import { handelDownloadReport, handleDeleteReport, handleGetAllReports } from '../../Store/report.slice';
+import { handelDownloadReport, handleDeleteReport, handleGetAllReports} from '../../Store/report.slice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
@@ -26,6 +26,7 @@ interface DropdownItem {
 export default function ReportsTable() {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedName, setSelectedName] = useState<string>('');
+    const [downloadingReportId, setDownloadingReportId] = useState<string>('');
     const [selectedSource, setSelectedSource] = useState<string>('');
     const [selectedYear, setSelectedYear] = useState<string>('');
     const [nameOptions, setNameOptions] = useState<DropdownItem[]>([]);
@@ -48,11 +49,13 @@ export default function ReportsTable() {
                     break;
 
                 case 'download':
-                    await dispatch(handelDownloadReport(reportId));
-                    break;
-
-                default:
-                    break;
+                    try {
+                        setDownloadingReportId(reportId);
+                        await dispatch(handelDownloadReport(reportId));
+                    } finally {
+                        setDownloadingReportId('');
+                    }
+                break;
             }
         } catch (error) {
             console.error(`Error handling action "${action}":`, error);
@@ -93,15 +96,15 @@ export default function ReportsTable() {
     useEffect(() => {
         setNameOptions([
             { value: '', label: 'الكل' },
-            ...(nameFilters ? nameFilters.map((report: string) => ({ value: report, label: report })) : []),
+            ...nameFilters.map((name: string) => ({ value: name, label: name })),
         ]);
         setSourceOptions([
             { value: '', label: 'الكل' },
-            ...(sourceFilters ? sourceFilters.map((report: string) => ({ value: report, label: report })) : []),
+            ...sourceFilters.map((source: string) => ({ value: source, label: source })),
         ]);
         setYearOptions([
             { value: '', label: 'الكل' },
-            ...(yearFilters ? yearFilters.map((report: string) => ({ value: report, label: report })) : []),
+            ...yearFilters.map((year: string) => ({ value: year, label: year })),
         ]);
     }, [nameFilters, sourceFilters, yearFilters]);
 
@@ -112,19 +115,27 @@ export default function ReportsTable() {
     }, []);
 
     const handleNameChange = (value: string) => {
-        fetchData({ classification: value, source: selectedSource, year: selectedYear });
         setSelectedName(value);
-    }
-
-    const handleSourceChange = (value: string) => {
-        fetchData({ classification: selectedName, source: value, year: selectedYear });
-        setSelectedSource(value);
+        setSelectedSource('');
+        setSelectedYear('');
+        fetchData({ classification: value });
     };
+    
+    const handleSourceChange = (value: string) => {
+        setSelectedSource(value);
+        setSelectedYear('');
+        fetchData({ source: value, classification: selectedName });
+    };
+    
     const handleYearChange = (value: string) => {
-        fetchData({ classification: selectedName, source: selectedSource, year: value });
         setSelectedYear(value);
-    }
+        fetchData({ year: value, classification: selectedName, source: selectedSource });
+    };
+
     const handleKeyUp = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedYear("");
+        setSelectedSource("");
+        setSelectedName("");
         fetchData({ custom: (event.target as HTMLInputElement).value });
     };
 
@@ -208,7 +219,7 @@ export default function ReportsTable() {
                                 <th scope="col" className="py-3.5 pl-4 pr-3 text-right text-sm font-semibold text-gray-900  sm:pl-6">
                                     اسم التقرير
                                 </th>
-                                
+
                                 <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 min-w-[150px]">
                                     مصدر التقرير
                                 </th>
@@ -233,7 +244,7 @@ export default function ReportsTable() {
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                         {report.name}
                                     </td>
-                                    
+
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report.source}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report.year}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report.classification}</td>
@@ -261,9 +272,19 @@ export default function ReportsTable() {
                                             onClick={() => handleAction(report._id, 'download')}
                                             className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] whitespace-nowrap"
                                             title="تحميل"
+                                            disabled={downloadingReportId === report._id}
                                         >
-                                            <img src={downloadIcon} alt='download' className="w-4 h-4" />
-                                            <span>تحميل</span>
+                                            {downloadingReportId === report._id ? (
+                                                <svg className="animate-spin h-5 w-5 text-[#3D9635]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                            ) : (
+                                                <>
+                                                    <img src={downloadIcon} alt='download' className="w-4 h-4" />
+                                                    <span>تحميل</span>
+                                                </>
+                                            )}
                                         </button>
                                     </td>
                                 </tr>

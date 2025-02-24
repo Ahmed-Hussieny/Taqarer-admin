@@ -5,6 +5,7 @@ export interface Evidence {
     year: string;
     pdfName: string;
     source: string;
+    image?: string;
     link: string;
     classification: string;
     description: string;

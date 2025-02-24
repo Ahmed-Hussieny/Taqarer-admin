@@ -22,6 +22,7 @@ export default function EvidencesTable() {
     const [selectedName, setSelectedName] = useState<string>('');
     const [selectedSource, setSelectedSource] = useState<string>('');
     const [selectedYear, setSelectedYear] = useState<string>('');
+    const [downloadingReportId, setDownloadingReportId] = useState<string>('');
     const [nameOptions, setNameOptions] = useState<DropdownItem[]>([]);
     const [sourceOptions, setSourceOptions] = useState<DropdownItem[]>([]);
     const [yearOptions, setYearOptions] = useState<DropdownItem[]>([]);
@@ -35,7 +36,7 @@ export default function EvidencesTable() {
         setCurrentPage(page);
         fetchData({ page });
     };
-    
+
     const fetchData = async ({
         page = 1,
         classification = '',
@@ -69,19 +70,22 @@ export default function EvidencesTable() {
     }, []);
 
     const handleNameChange = (value: string) => {
-        fetchData({ classification: value, source: selectedSource, year: selectedYear });
         setSelectedName(value);
+        fetchData({ classification: value});
     }
 
     const handleSourceChange = (value: string) => {
-        fetchData({ classification: selectedName, source: value, year: selectedYear });
         setSelectedSource(value);
+        fetchData({ classification: selectedName, source: value});
     };
     const handleYearChange = (value: string) => {
-        fetchData({ classification: selectedName, source: selectedSource, year: value });
         setSelectedYear(value);
+        fetchData({ classification: selectedName, source: selectedSource, year: value });
     }
     const handleKeyUp = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedYear("");
+        setSelectedSource("");
+        setSelectedName("");
         fetchData({ custom: (event.target as HTMLInputElement).value });
     };
     const handleAction = async (reportId: string, action: string) => {
@@ -97,10 +101,13 @@ export default function EvidencesTable() {
                     break;
 
                 case 'download':
-                    await handleDownloadAction(reportId);
-                    break;
+                    try {
+                        setDownloadingReportId(reportId);
+                        await dispatch(handelDownloadEvidence(reportId));
+                    } finally {
+                        setDownloadingReportId('');
+                    }
 
-                default:
                     break;
             }
         } catch (error) {
@@ -120,14 +127,6 @@ export default function EvidencesTable() {
 
         setShowDeleteModal(false); // Close the modal after deletion
         setReportIdToDelete(null); // Reset the report ID
-    };
-    const handleDownloadAction = async (reportId: string) => {
-        const data = await dispatch(handelDownloadEvidence(reportId));
-        if ((data.payload as { success: boolean }).success) {
-            toast.success('تم تحميل الدليل بنجاح');
-        } else {
-            toast.error('حدث خطأ أثناء تحميل الدليل');
-        }
     };
 
     return (
@@ -261,9 +260,19 @@ export default function EvidencesTable() {
                                             onClick={() => handleAction(evidence._id, 'download')}
                                             className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] whitespace-nowrap"
                                             title="تحميل"
+                                            disabled={downloadingReportId === evidence._id}
                                         >
-                                            <img src={downloadIcon} alt='download' className="w-4 h-4" />
-                                            <span>تحميل</span>
+                                            {downloadingReportId === evidence._id ? (
+                                                <svg className="animate-spin h-5 w-5 text-[#3D9635]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                            ) : (
+                                                <>
+                                                    <img src={downloadIcon} alt='download' className="w-4 h-4" />
+                                                    <span>تحميل</span>
+                                                </>
+                                            )}
                                         </button>
                                     </td>
                                 </tr>
@@ -334,7 +343,6 @@ export default function EvidencesTable() {
                     </div>
                 </div>
             )}
-
         </div>
     );
 }

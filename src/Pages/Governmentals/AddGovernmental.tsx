@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
@@ -17,14 +16,7 @@ const ArticleEditor: React.FC = () => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const validationSchema = yup.object({
-    image: yup.mixed()
-      .required('الصورة مطلوبة')
-      .test('fileType', 'يجب أن تكون الصورة من نوع jpg, jpeg, png, أو gif', value => {
-        if (value) {
-          return ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].includes((value as File).type);
-        }
-        return true;
-      }),
+    image: yup.mixed().nullable(), // Make image optional
     name: yup.string().required('العنوان مطلوب'),
     description: yup.string().required('الوصف مطلوب'),
     link: yup.string().url('الرابط غير صحيح'),
@@ -37,25 +29,27 @@ const ArticleEditor: React.FC = () => {
     dispatch(changeActiveNav(4));
   }, []);
 
-  const handleSubmit = async (values: { image: File | null; name: string; link: string; description: string; classification: string }, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+  const handleSubmit = async (values: { image: File | null | ""; name: string; link: string; description: string; classification: string }, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('description', values.description);
     formData.append('classification', values.classification);
     formData.append('link', values.link);
+
+    // Only append the image if it exists
     if (values.image) {
       formData.append('image', values.image);
     }
 
     try {
       const data = await dispatch(handleAddGovernmental(formData));
+      console.log(data.payload)
       if(data.payload.success) {
         toast.success('تمت اضافة الجهة بنجاح');
         navigate(-1);
       }else{
         toast.error('فشلت عملية اضافة الجهة');
       }
-      // 
     } catch (error) {
       console.error('Submission error:', error);
     }
@@ -80,10 +74,10 @@ const ArticleEditor: React.FC = () => {
 
           <div className='bg-[#F7F8F9] p-2 items-center py-5 rounded-xl border mb-2 gap-3 grid md:grid-cols-5 grid-cols-1'>
             <div className='col-span-1 px-3'>
-              <img 
-                src={previewImage || img1} 
-                alt="Article" 
-                className="h-24 w-24  object-cover rounded-lg"
+              <img
+                src={previewImage || img1}
+                alt="Article"
+                className="h-28 w-32  object-cover rounded-lg"
               />
             </div>
             <div className='col-span-4'>
@@ -104,7 +98,7 @@ const ArticleEditor: React.FC = () => {
                     }}
                   />
                 </label>
-                <button 
+                <button
                   type="button"
                   className='bg-[#EAF7E8] ms-2 text-main_color hover:opacity-90  border px-4 py-2 rounded-lg'
                   onClick={() => {
