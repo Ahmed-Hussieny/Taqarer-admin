@@ -1,5 +1,5 @@
 import { useAppDispatch } from '../../Store/store';
-import { changeActiveNav, changeCurrentPath, HandleGetAllClientUsers, HandleToggleVerification } from '../../Store/user.slice';
+import { changeActiveNav, changeCurrentPath, HandleDeleteUser, HandleGetAllClientUsers, HandleToggleVerification } from '../../Store/user.slice';
 import { useEffect, useState } from 'react';
 // import editIcon from '../../assets/Icons/DashBoard/editIcon.svg';
 import deleteIcon from '../../assets/Icons/DashBoard/trash.svg';
@@ -30,7 +30,9 @@ export default function SubscriberManagement() {
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const { clientUsers, numberOfPages } = useSelector((state: { user: { clientUsers: ClientUser[], numberOfPages: number } }) => state.user);
-
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [togglingUserId, setTogglingUserId] = useState<string | null>(null);
+  
 
   const fetchData = async ({
     page = 1,
@@ -54,12 +56,35 @@ export default function SubscriberManagement() {
     dispatch(changeActiveNav(6));
   }, []);
 
+  const deleteUser = async (id: string) => {
+    try {
+      setDeletingUserId(id);
+      const data = await dispatch(HandleDeleteUser(id));
+      if (data.payload.success) {
+        toast.success('تم حذف المشترك');
+      } else {
+        toast.error('لم يتم حذف المشترك');
+      }
+    } catch {
+      toast.error('حدث خطأ أثناء الحذف');
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
+
   const toggleVerifyUser = async (id: string) => {
-    const data = await dispatch(HandleToggleVerification(id));
-    if (data.payload.user.isVerified) {
-      toast.success('تم تفعيل المشترك');
-    } else {
-      toast.success('تم تعليق المشترك')
+    try {
+      setTogglingUserId(id);
+      const data = await dispatch(HandleToggleVerification(id));
+      if (data.payload.user.isVerified) {
+        toast.success('تم تفعيل المشترك');
+      } else {
+        toast.success('تم تعليق المشترك')
+      }
+    } catch{
+      toast.error('حدث خطأ أثناء التحديث');
+    } finally {
+      setTogglingUserId(null);
     }
   };
 
@@ -167,39 +192,54 @@ export default function SubscriberManagement() {
                 </td>
                 <td className="whitespace-nowrap px-3 py-4 w-40 text-sm text-gray-500 min-w-[200px]">
                   <div className="flex items-center gap-2">
-                    {/* <button
-                                                // onClick={() => handleAction(clientUser._id, 'edit')}
-                                                className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#F7F8F9] whitespace-nowrap"
-                                                title="تعديل"
-                                            >
-                                                <img src={editIcon} alt="edit" className="w-4 h-4" />
-                                                <span>تعديل</span>
-                                            </button> */}
-                    {clientUser.isVerified ? <button
-                      onClick={() => toggleVerifyUser(clientUser._id)}
-                      className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
-                      title="تعليق"
-                    >
-                      <img src={pin} alt="pin" className="w-4 h-4" />
-                      <span>تعليق</span>
-                    </button>
-                      : <button
-                        onClick={() => toggleVerifyUser(clientUser._id)}
-                        className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
-                        title="تفعيل"
-                      >
-                        <img src={pin} alt="pin" className="w-4 h-4" />
-                        <span>تفعيل</span>
-                      </button>}
+
+                   {clientUser.isVerified ? (
+            <button
+              onClick={() => toggleVerifyUser(clientUser._id)}
+              disabled={togglingUserId === clientUser._id}
+              className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
+              title="تعليق"
+            >
+              {togglingUserId === clientUser._id ? (
+                <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+              ) : (
+                <>
+                  <img src={pin} alt="pin" className="w-4 h-4" />
+                  <span>تعليق</span>
+                </>
+              )}
+            </button>
+          ) : (
+            <button
+              onClick={() => toggleVerifyUser(clientUser._id)}
+              disabled={togglingUserId === clientUser._id}
+              className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
+              title="تفعيل"
+            >
+              {togglingUserId === clientUser._id ? (
+                <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+              ) : (
+                <>
+                  <img src={pin} alt="pin" className="w-4 h-4" />
+                  <span>تفعيل</span>
+                </>
+              )}
+            </button>
+          )}
 
                     {/* pin */}
                     <button
-                      // onClick={() => handleAction(clientUser._id, 'delete')}
-                      className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
-                      title="حذف"
-                    >
-                      <img className="w-4 h-4" src={deleteIcon} alt="delete" />
-                    </button>
+            onClick={() => deleteUser(clientUser._id)}
+            disabled={deletingUserId === clientUser._id}
+            className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
+            title="حذف"
+          >
+            {deletingUserId === clientUser._id ? (
+              <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+            ) : (
+              <img className="w-4 h-4" src={deleteIcon} alt="delete" />
+            )}
+          </button>
                   </div>
                 </td>
               </tr>

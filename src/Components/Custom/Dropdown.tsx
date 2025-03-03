@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface DropdownItem {
-    value: string;
-    label: string;
-  }
+  value: string;
+  label: string;
+}
 
 const Dropdown = ({
   label,
@@ -17,6 +17,7 @@ const Dropdown = ({
   onChange: (value: string) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleToggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -27,25 +28,39 @@ const Dropdown = ({
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="dropdown relative cursor-pointer  mx-1">
-      {/* {label && <label className="block text-gray-700 ">{label}</label>} */}
-      <div className="dropdown-container relative  text-[#D5DAE1">
-        <input type="hidden" value={selectedValue}  />
+    <div className="dropdown relative cursor-pointer mx-1" ref={dropdownRef}>
+      <div className="dropdown-container relative text-[#D5DAE1">
+        <input type="hidden" value={selectedValue} />
         <div
           className="dropdown-toggle cursor-pointer px-3 bg-white border border-[#D5DAE1] p-2 rounded-md flex items-center justify-between"
           onClick={handleToggleDropdown}
         >
           <span>{selectedValue || label}</span>
           <span className="ml-2">
-            {/* Arrow Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
               className={`w-4 h-4 transform transition-transform duration-300 ${
-                isOpen ? 'rotate-180' : ''
+                isOpen ? "rotate-180" : ""
               }`}
             >
               <path

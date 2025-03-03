@@ -25,7 +25,7 @@ const AddEvidences: React.FC = () => {
     reportExcel: Yup.mixed().required("مطلوب"),
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(changeCurrentPath('رفع الادلة'));
   }, [])
 
@@ -87,6 +87,19 @@ const AddEvidences: React.FC = () => {
                 </svg>
                 <span className="ml-2 text-gray-700">رفع ملف Excel</span>
               </label>
+              
+              {/* Added sample file download link */}
+              <p className="mt-2 text-sm text-blue-600 hover:text-blue-800">
+                <a 
+                  href="/src/assets/samples/مثال رفع ادلة.xlsx" 
+                  download="مثال رفع ادلة.xlsx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  اضغط هنا لتحميل نموذج الادلة
+                </a>
+              </p>
+
               {fileName && (
                 <p className="mt-2 text-sm text-gray-600">الملف المحدد: {fileName}</p>
               )}

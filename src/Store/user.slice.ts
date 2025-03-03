@@ -137,6 +137,22 @@ export const HandleToggleVerification = createAsyncThunk("auth/HandleToggleVerif
         return err.response.data;
     }
 });
+
+//^ HandleDeleteUser
+export const HandleDeleteUser = createAsyncThunk("auth/HandleDeleteUser", async (id: string) => {
+    try {
+        const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/client-user/deleteUser/${id}`,{
+            headers:{
+                accesstoken: `Bearer_${localStorage.getItem("authToken")}`
+            }
+        });
+        return response.data;
+    }
+    catch (error) {
+        const err = error as ApiErrorResponse;
+        return err.response.data;
+    }
+});
 interface Package {
     _id: string;
     name: string;
@@ -276,6 +292,15 @@ const userSlice = createSlice({
             })
         });
         builder.addCase(HandleToggleVerification.rejected, (state) => {
+            state.loading = false;
+        });
+
+        //^ HandleDeleteUser
+        builder.addCase(HandleDeleteUser.fulfilled, (state, action) => {
+            state.loading = false;
+            state.clientUsers = state.clientUsers.filter(user => user._id !== action.payload.user._id)
+        });
+        builder.addCase(HandleDeleteUser.rejected, (state) => {
             state.loading = false;
         });
     },
