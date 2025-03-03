@@ -17,6 +17,7 @@ interface Report {
     type: string;
     year: number;
     source: string;
+    pdfName: string;
     classification: string;
 }
 interface DropdownItem {
@@ -44,8 +45,8 @@ export default function ReportsTable() {
                     break;
 
                 case 'delete':
-                    setReportIdToDelete(reportId); // Set the report ID to delete
-                    setShowDeleteModal(true); // Show the delete confirmation modal
+                    setReportIdToDelete(reportId);
+                    setShowDeleteModal(true);
                     break;
 
                 case 'download':
@@ -269,7 +270,7 @@ export default function ReportsTable() {
                                     </td>
                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 min-w-[150px]">
                                         <button
-                                            onClick={() => handleAction(report._id, 'download')}
+                                            onClick={() => handleAction(report.pdfName, 'download')}
                                             className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] whitespace-nowrap"
                                             title="تحميل"
                                             disabled={downloadingReportId === report._id}

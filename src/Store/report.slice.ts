@@ -89,33 +89,32 @@ export const handleDeleteReport = createAsyncThunk("report/handleDeleteReport", 
 
 export const handelDownloadReport = createAsyncThunk(
     "report/handelDownloadReport",
-    async (id: string, { rejectWithValue }) => {
+    async (id: string) => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/report/downloadReport/${id}`, {
-          responseType: "blob", // Ensures we get binary data (PDF)
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_WS_RECONNECT}/uploads/Original_PDFs/Reports/${id}`, {
           headers: {
             accesstoken: `Bearer_${localStorage.getItem("authToken")}`
           },
+        //   responseType: "blob", // Handles PDF downloads correctly
         });
   
-        // Create a Blob URL and trigger the download
-        const blob = new Blob([response.data], { type: "application/pdf" });
-        const url = window.URL.createObjectURL(blob);
+        // Create a URL for the file and trigger download
+        const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", `report-${id}.pdf`); // Set filename
+        link.setAttribute("download", `report-${id}.pdf`); // Set the filename
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url); // Cleanup
+        link.remove();
   
         return { success: true };
       } catch (error) {
-        const err = error as ApiErrorResponse;
-        return rejectWithValue(err.response.data);
+        console.error("Error downloading report:", error);
+        return { success: false, message: "Download failed" };
       }
     }
   );
+  
   
   interface ClassificationI {
     classification: string;
