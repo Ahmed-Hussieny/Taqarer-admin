@@ -7,5 +7,6 @@ export interface Pakage {
     createdAt: string;
     features: string[];
     updatedAt: string;
+    active: boolean;
     __v: number;
 };
