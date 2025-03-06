@@ -23,8 +23,9 @@ interface FormValues {
 
 const AddEvidence: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
-    const [fileName, setFileName] = useState<string | null>(null);
-  
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const initialValues: FormValues = {
     reportId: "",
@@ -43,45 +44,47 @@ const AddEvidence: React.FC = () => {
     reportCategory: Yup.string().required("مطلوب"),
     reportSource: Yup.string().required("مطلوب"),
     reportYear: Yup.number().required("مطلوب"),
-    reportSummary: Yup.string().required("مطلوب"),
-    reportLink: Yup.string().url("يجب أن يكون رابط صالح").required("مطلوب"),
+    reportSummary: Yup.string(),
+    reportLink: Yup.string().url("يجب أن يكون رابط صالح"),
     reportPdf: Yup.mixed().required("مطلوب"),
   });
 
   const dispatch = useAppDispatch();
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(changeCurrentPath('رفع الدليل'));
     dispatch(changeActiveNav(2));
-  },[])
+  }, [])
   return (
     <div className="">
       <Toaster
-  position="top-center"
-  reverseOrder={false}
-/>
+        position="top-center"
+        reverseOrder={false}
+      />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={async(values) => {
-            const formData = new FormData();
-            formData.append("reportId", values.reportId);
-            formData.append("name", values.reportName);
-            formData.append("classification", values.reportCategory);
-            formData.append("source", values.reportSource);
-            formData.append("year", values.reportYear ? values.reportYear.toString() : "");
-            formData.append("description", values.reportSummary);
-            formData.append("link", values.reportLink);
-          
-            if (values.reportPdf) {
-              formData.append("pdf", values.reportPdf);
-            }
-            const data =await dispatch(handleAddEvidence(formData));
-            if(data.payload.success){
-              toast.success('تمت الإضافة بنجاح');
-              navigate(-1);
-            }else{
-              toast.error(data.payload.message);
-            }
+        onSubmit={async (values) => {
+          setLoading(true);
+          const formData = new FormData();
+          formData.append("reportId", values.reportId);
+          formData.append("name", values.reportName);
+          formData.append("classification", values.reportCategory);
+          formData.append("source", values.reportSource);
+          formData.append("year", values.reportYear ? values.reportYear.toString() : "");
+          formData.append("description", values.reportSummary);
+          formData.append("link", values.reportLink);
+
+          if (values.reportPdf) {
+            formData.append("pdf", values.reportPdf);
+          }
+          const data = await dispatch(handleAddEvidence(formData));
+          if (data.payload.success) {
+            toast.success('تمت الإضافة بنجاح');
+            navigate(-1);
+          } else {
+            toast.error(data.payload.message);
+          }
+          setLoading(false);
         }}
       >
         {({ setFieldValue }) => (
@@ -89,7 +92,7 @@ const AddEvidence: React.FC = () => {
             <h2 className="font-bold text-main_color">ادخل بيانات الدليل</h2>
             {/* Row 1: Name & Category */}
             <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
-            <div>
+              <div>
                 <label className="block text-sm font-medium">رقم الدليل</label>
                 <Field
                   type="text"
@@ -101,8 +104,8 @@ const AddEvidence: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                <div>
+              </div>
+              <div>
                 <label className="block text-sm font-medium">اسم الدليل</label>
                 <Field
                   type="text"
@@ -114,8 +117,8 @@ const AddEvidence: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                <div>
+              </div>
+              <div>
                 <label className="block text-sm font-medium">تصنيف الدليل</label>
                 <Field
                   type="text"
@@ -127,8 +130,8 @@ const AddEvidence: React.FC = () => {
                   component="div"
                   className="text-red-500 text-sm"
                 />
-                </div>
-                
+              </div>
+
             </div>
 
             {/* Row 2: Source & Year */}
@@ -256,6 +259,25 @@ const AddEvidence: React.FC = () => {
               >
                 <img src={plus2} alt='plus2' className="w-4 h-4" />
                 <span className=' sm:inline pe-2'>اضافة الدليل</span>
+              </button>
+
+
+              <button
+                type="submit"
+                className="px-4 flex items-cente py-2 bg-main_color text-white rounded-lg hover:bg-opacity-90 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center">
+                    <svg className="animate-spin h-5 w-5 mr-2 border-t-2 border-white rounded-full" viewBox="0 0 24 24"></svg>
+                    جاري الإضافة...
+                  </span>
+                ) : (
+                  <>
+                    <img src={plus2} alt='plus2' className="w-4 h-4" />
+                    <span className=' sm:inline pe-2'>اضافة الدليل</span>
+                  </>
+                )}
               </button>
             </div>
           </Form>

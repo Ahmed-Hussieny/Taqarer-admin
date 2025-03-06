@@ -24,6 +24,8 @@ interface FormValues {
 const OrderForm: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const initialValues: FormValues = {
     reportId: "",
@@ -42,8 +44,8 @@ const OrderForm: React.FC = () => {
     reportCategory: Yup.string().required("مطلوب"),
     reportSource: Yup.string().required("مطلوب"),
     reportYear: Yup.number().required("مطلوب"),
-    reportSummary: Yup.string().required("مطلوب"),
-    reportLink: Yup.string().url("يجب أن يكون رابط صالح").required("مطلوب"),
+    reportSummary: Yup.string(),
+    reportLink: Yup.string().url("يجب أن يكون رابط صالح"),
     reportPdf: Yup.mixed().required("مطلوب"),
   });
 
@@ -61,6 +63,7 @@ const OrderForm: React.FC = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
+          setLoading(true);
           const formData = new FormData();
           formData.append("reportId", values.reportId);
           formData.append("name", values.reportName);
@@ -74,12 +77,14 @@ const OrderForm: React.FC = () => {
             formData.append("pdf", values.reportPdf);
           }
           const data = await dispatch(handleAddReport(formData));
+          console.log(data)
           if (data.payload.success) {
             toast.success('تمت الإضافة بنجاح');
             navigate(-1);
           } else {
             toast.error(data.payload.message);
           }
+          setLoading(false);
         }}
       >
         {({ setFieldValue }) => (
@@ -249,11 +254,31 @@ const OrderForm: React.FC = () => {
               </button>
               <button
                 // onClick={() => navigete('/add-reports')}
+                type="submit"
                 className="text-white  text-sm flex items-center gap-1 rounded-lg py-3 px-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
                 title="اضافة التقرير"
               >
                 <img src={plus2} alt='plus2' className="w-4 h-4" />
                 <span className=' sm:inline pe-2'>اضافة التقرير</span>
+              </button>
+
+
+              <button
+                type="submit"
+                className="px-4 flex items-cente py-2 bg-main_color text-white rounded-lg hover:bg-opacity-90 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center">
+                    <svg className="animate-spin h-5 w-5 mr-2 border-t-2 border-white rounded-full" viewBox="0 0 24 24"></svg>
+                    جاري الإضافة...
+                  </span>
+                ) : (
+                  <>
+                    <img src={plus2} alt='plus2' className="w-4 h-4" />
+                    <span className=' sm:inline pe-2'>اضافة التقرير</span>
+                  </>
+                )}
               </button>
             </div>
           </Form>

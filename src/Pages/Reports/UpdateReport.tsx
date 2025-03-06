@@ -18,14 +18,15 @@ interface FormValues {
   reportYear: number | null;
   reportSummary: string;
   reportLink: string;
-  pdf: File | null;
+  pdf: File | null | "";
 }
 
 const UpdateReport: React.FC = () => {
-  const [fileName, setFileName] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { reportId } = useParams();
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState<FormValues>({
     reportId: "",
     reportName: "",
@@ -34,7 +35,7 @@ const UpdateReport: React.FC = () => {
     reportYear: null,
     reportSummary: "",
     reportLink: "",
-    pdf: null,
+    pdf: "",
   });
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const UpdateReport: React.FC = () => {
             reportYear: payload.report.year || null,
             reportSummary: payload.report.description || "",
             reportLink: payload.report.link || "",
-            pdf: null,
+            pdf: "",
           });
         }
       } catch {
@@ -73,6 +74,7 @@ const UpdateReport: React.FC = () => {
   });
 
   const handleSubmit = async (values: FormValues) => {
+    setLoading(true);
     const formData = new FormData();
     formData.append("reportId", values.reportId);
     formData.append("name", values.reportName);
@@ -81,7 +83,7 @@ const UpdateReport: React.FC = () => {
     formData.append("year", values.reportYear?.toString() || "");
     formData.append("description", values.reportSummary);
     formData.append("link", values.reportLink);
-    if (values.pdf) formData.append("pdf", values.pdf); 
+    if (values.pdf) formData.append("pdf", values.pdf);
     try {
       const { payload } = await dispatch(handleUpdateReport({
         id: reportId as string,
@@ -99,6 +101,8 @@ const UpdateReport: React.FC = () => {
       } else {
         toast.error("An unknown error occurred");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -268,11 +272,20 @@ const UpdateReport: React.FC = () => {
               </button>
               <button
                 type="submit"
-                className="text-white  text-sm flex items-center gap-1 rounded-lg py-3 px-3 hover:bg-green-600 bg-main_color transition-colors"
-                title="اضافة التقرير"
+                className="px-4 flex items-cente py-2 bg-main_color text-white rounded-lg hover:bg-opacity-90 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={loading}
               >
-                <img src={plus2} alt='plus2' className="w-4 h-4" />
-                <span className=' sm:inline pe-2'>تعديل التقرير</span>
+                {loading ? (
+                  <span className="flex items-center">
+                    <svg className="animate-spin h-5 w-5 mr-2 border-t-2 border-white rounded-full" viewBox="0 0 24 24"></svg>
+                    جاري التحديث...
+                  </span>
+                ) : (
+                  <span className="flex items-center">
+                    <img src={plus2} alt='plus2' className="w-4 h-4" />
+                    تحديث التقرير
+                  </span>
+                )}
               </button>
             </div>
           </Form>

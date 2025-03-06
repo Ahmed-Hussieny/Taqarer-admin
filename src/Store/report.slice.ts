@@ -95,14 +95,14 @@ export const handelDownloadReport = createAsyncThunk(
           headers: {
             accesstoken: `Bearer_${localStorage.getItem("authToken")}`
           },
-        //   responseType: "blob", // Handles PDF downloads correctly
+          responseType: "blob",
         });
   
         // Create a URL for the file and trigger download
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", `report-${id}.pdf`); // Set the filename
+        link.setAttribute("download", `report-${id}`); // Set the filename
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -218,7 +218,7 @@ const reportSlice = createSlice({
                 state.yearFilters = action.payload.reports.filterData.years;
             }
             state.reports = action.payload.reports.data;
-            state.numberOfPages = action.payload.totalPages;
+            state.numberOfPages = action.payload.reports.totalPages;
         });
     
         builder.addCase(handleGetAllReports.rejected, (state) => {

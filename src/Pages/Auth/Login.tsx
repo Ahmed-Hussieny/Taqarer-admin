@@ -51,10 +51,11 @@ export default function Login() {
             reverseOrder={false}
             />
             <div className="flex flex-wrap m-0 p-0 h-screen ">
+                
                 <div className="w-full md:w-1/3 p-8 flex flex-col justify-center">
                     <h6 className="text-xl font-semibold text-center">تسجيل الدخول</h6>
                     
-
+                    <form onSubmit={loginForm.handleSubmit}>
                     <div className="mb-3" >
                         <label htmlFor="email" className="block text-gray-700">
                         البريد الالكتروني   
@@ -120,7 +121,7 @@ export default function Login() {
                         </Link>
                     </div>
 
-                    <form onSubmit={loginForm.handleSubmit}>
+
                         {loading ? (
                             <button
                                 type="button"
@@ -141,18 +142,6 @@ export default function Login() {
                             </button>
                         )}
                     </form>
-
-                    {/* <div className="text-center mt-3">
-                        <p>
-                            ليس لديك حساب؟
-                            <span
-                                onClick={() => navigate("/Register")}
-                                className="text-main_color cursor-pointer hover:underline"
-                            >
-                                تسجيل جديد
-                            </span>
-                        </p>
-                    </div> */}
                 </div>
 
                 <div className="hidden md:block md:w-2/3 bg-main_color p-6">

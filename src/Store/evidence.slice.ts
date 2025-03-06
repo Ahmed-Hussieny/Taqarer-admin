@@ -92,7 +92,7 @@ export const handelDownloadEvidence = createAsyncThunk(
     async (id: string, { rejectWithValue }) => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/guide/downloadGuide/${id}`, {
-          responseType: "blob", // Ensures we get binary data (PDF)
+          responseType: "blob",
           headers:{
             accesstoken: `Bearer_${localStorage.getItem("authToken")}`
         }
@@ -103,7 +103,7 @@ export const handelDownloadEvidence = createAsyncThunk(
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", `report-${id}.pdf`); // Set filename
+        link.setAttribute("download", `report-${id}`); // Set filename
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -147,7 +147,7 @@ const evidenceSlice = createSlice({
                 state.yearFilters = action.payload.guides.filterData.years;
             }
             state.evidences = action.payload.guides.data;
-            state.numberOfPages = action.payload.totalPages;
+            state.numberOfPages = action.payload.guides.totalPages;
         });
         builder.addCase(handleGetAllEvidences.rejected, (state) => {
             state.loading = false;

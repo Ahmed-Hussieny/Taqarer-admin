@@ -18,15 +18,16 @@ interface FormValues {
   reportYear: number | null;
   reportSummary: string;
   reportLink: string;
-  pdf: File | null;
+  pdf: File | null | "";
 }
 
 const UpdateEvidence: React.FC = () => {
-
+  const { reportId } = useParams();
   const [fileName, setFileName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { reportId } = useParams();
+
   const [initialValues, setInitialValues] = useState<FormValues>({
     reportId: "",
     reportName: "",
@@ -35,7 +36,7 @@ const UpdateEvidence: React.FC = () => {
     reportYear: null,
     reportSummary: "",
     reportLink: "",
-    pdf: null,
+    pdf: "",
   });
 
   useEffect(() => {
@@ -74,6 +75,7 @@ const UpdateEvidence: React.FC = () => {
   });
 
   const handleSubmit = async (values: FormValues) => {
+    setLoading(true);
     const formData = new FormData();
     formData.append("reportId", values.reportId);
     formData.append("name", values.reportName);
@@ -101,6 +103,8 @@ const UpdateEvidence: React.FC = () => {
       } else {
         toast.error("An unknown error occurred");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -269,12 +273,23 @@ const UpdateEvidence: React.FC = () => {
               >
                 <span className='sm:inline pe-2'>الغاء</span>
               </button>
+
               <button
-                className="text-white  text-sm flex items-center gap-1 rounded-lg py-3 px-3 hover:bg-green-600 bg-main_color transition-colors"
-                title="اضافة التقرير"
+                type="submit"
+                className="px-4 flex items-cente py-2 bg-main_color text-white rounded-lg hover:bg-opacity-90 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={loading}
               >
-                <img src={plus2} alt='plus2' className="w-4 h-4" />
-                <span className=' sm:inline pe-2'>تعديل التقرير</span>
+                {loading ? (
+                  <span className="flex items-center">
+                    <svg className="animate-spin h-5 w-5 mr-2 border-t-2 border-white rounded-full" viewBox="0 0 24 24"></svg>
+                    جاري التحديث...
+                  </span>
+                ) : (
+                  <span className="flex items-center">
+                    <img src={plus2} alt='plus2' className="w-4 h-4" />
+                    تحديث الدليل
+                  </span>
+                )}
               </button>
             </div>
           </Form>

@@ -239,7 +239,7 @@ export default function EvidencesTable() {
                                     <td className="whitespace-nowrap px-3 py-4 w-40 text-sm text-gray-500 min-w-[200px]">
                                         <div className="flex items-center gap-2">
                                             <button
-                                                onClick={() => handleAction(evidence._id, 'edit')}
+                                                onClick={() => handleAction(evidence?._id, 'edit')}
                                                 className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#F7F8F9] whitespace-nowrap"
                                                 title="تعديل"
                                             >
@@ -247,7 +247,7 @@ export default function EvidencesTable() {
                                                 <span>تعديل</span>
                                             </button>
                                             <button
-                                                onClick={() => handleAction(evidence._id, 'delete')}
+                                                onClick={() => handleAction(evidence?._id, 'delete')}
                                                 className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
                                                 title="حذف"
                                             >

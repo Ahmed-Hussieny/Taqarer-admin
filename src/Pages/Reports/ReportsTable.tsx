@@ -241,18 +241,18 @@ export default function ReportsTable() {
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {reports?.map((report) => (
-                                <tr key={report._id}>
+                                <tr key={report?._id}>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                        {report.name}
+                                        {report?.name}
                                     </td>
 
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report.source}</td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report.year}</td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report.classification}</td>
+                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report?.source}</td>
+                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report?.year}</td>
+                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{report?.classification}</td>
                                     <td className="whitespace-nowrap px-3 py-4 w-40 text-sm text-gray-500 min-w-[200px]">
                                         <div className="flex items-center gap-2">
                                             <button
-                                                onClick={() => handleAction(report._id, 'edit')}
+                                                onClick={() => handleAction(report?._id, 'edit')}
                                                 className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#F7F8F9] whitespace-nowrap"
                                                 title="تعديل"
                                             >
@@ -260,7 +260,7 @@ export default function ReportsTable() {
                                                 <span>تعديل</span>
                                             </button>
                                             <button
-                                                onClick={() => handleAction(report._id, 'delete')}
+                                                onClick={() => handleAction(report?._id, 'delete')}
                                                 className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
                                                 title="حذف"
                                             >
@@ -270,7 +270,7 @@ export default function ReportsTable() {
                                     </td>
                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 min-w-[150px]">
                                         <button
-                                            onClick={() => handleAction(report.pdfName, 'download')}
+                                            onClick={() => handleAction(report?.pdfName, 'download')}
                                             className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] whitespace-nowrap"
                                             title="تحميل"
                                             disabled={downloadingReportId === report._id}
