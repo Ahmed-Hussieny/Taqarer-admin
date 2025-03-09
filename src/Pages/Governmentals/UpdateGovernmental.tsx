@@ -85,7 +85,7 @@ const UpdateGovernmental: React.FC = () => {
             {/* Name & Category */}
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <div>
-                <label className="block text-sm font-medium">رقم التقرير</label>
+                <label className="block text-sm font-medium">رقم الجهة</label>
                 <Field type="text" name="name" className="mt-1 block w-full bg-[#F7F8F9] p-2 rounded-lg border border-[#999999]" />
                 <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
               </div>
@@ -99,12 +99,12 @@ const UpdateGovernmental: React.FC = () => {
             {/* Source & Summary */}
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <div>
-                <label className="block text-sm font-medium">مصدر التقرير</label>
+                <label className="block text-sm font-medium">تصنيف الجهة</label>
                 <Field type="text" name="classification" className="mt-1 block w-full bg-[#F7F8F9] p-2 rounded-lg border border-[#999999]" />
                 <ErrorMessage name="classification" component="div" className="text-red-500 text-sm" />
               </div>
               <div>
-                <label className="block text-sm font-medium">نبذه عن التقرير</label>
+                <label className="block text-sm font-medium">نبذه عن الجهة</label>
                 <Field as="textarea" name="description" className="mt-1 block w-full bg-[#F7F8F9] p-2 rounded-lg border border-[#999999]" />
                 <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
               </div>

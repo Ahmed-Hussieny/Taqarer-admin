@@ -23,6 +23,7 @@ export const handleAddArticle = createAsyncThunk("article/handleAddArticle", asy
                 accesstoken: `Bearer_${localStorage.getItem("authToken")}`
             }
         });
+        console.log(response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -97,8 +98,9 @@ const articleSlice = createSlice({
             state.loading = false;
         });
 
-        builder.addCase(handleAddArticle.fulfilled, (state) => {
+        builder.addCase(handleAddArticle.fulfilled, (state,action) => {
             state.loading = false;
+            console.log(action.payload);
         });
         builder.addCase(handleAddArticle.rejected, (state) => {
             state.loading = false;

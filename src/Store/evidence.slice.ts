@@ -89,32 +89,30 @@ export const handleDeleteEvidence = createAsyncThunk("guide/handleDeleteEvidence
 
 export const handelDownloadEvidence = createAsyncThunk(
     "guide/handelDownloadEvidence",
-    async (id: string, { rejectWithValue }) => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/guide/downloadGuide/${id}`, {
-          responseType: "blob",
-          headers:{
-            accesstoken: `Bearer_${localStorage.getItem("authToken")}`
+    async (id: string) => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL_WS_RECONNECT}/uploads/Original_PDFs/Guides/${id}`, {
+            headers: {
+              accesstoken: `Bearer_${localStorage.getItem("authToken")}`
+            },
+            responseType: "blob",
+          });
+    
+          // Create a URL for the file and trigger download
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `report-${id}`); // Set the filename
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+    
+          return { success: true };
+        } catch (error) {
+          console.error("Error downloading report:", error);
+          return { success: false, message: "Download failed" };
         }
-        });
-  
-        // Create a Blob URL and trigger the download
-        const blob = new Blob([response.data], { type: "application/pdf" });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `report-${id}`); // Set filename
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url); // Cleanup
-  
-        return { success: true };
-      } catch (error) {
-        const err = error as ApiErrorResponse;
-        return rejectWithValue(err.response.data);
       }
-    }
   );
   
 

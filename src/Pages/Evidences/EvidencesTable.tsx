@@ -159,28 +159,31 @@ export default function EvidencesTable() {
                     </div>
 
                     {/* Right Section - Filters & Actions */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 col-span-2 gap-3 rounded-lg">
-                        <div className="flex col-span- items-center md:justify-start w-auto justify-center">
-                            <Dropdown
-                                label="نوع الدليل"
-                                options={nameOptions}
-                                selectedValue={selectedName}
-                                onChange={handleNameChange}
-                            />
-                            <Dropdown
-                                label="المصدر"
-                                options={sourceOptions}
-                                selectedValue={selectedSource}
-                                onChange={handleSourceChange}
-                            />
-                            <Dropdown
-                                label="العام"
-                                options={yearOptions}
-                                selectedValue={selectedYear}
-                                onChange={handleYearChange}
-                            />
+                    <div className="col-span-2 gap-3 items-center rounded-lg">
+                    <div className="justify-between items-center">
+                            <div className='grid grid-cols-3 gap-2'>
+                                <Dropdown
+                                    label="نوع الدليل"
+                                    options={nameOptions}
+                                    selectedValue={selectedName}
+                                    onChange={handleNameChange}
+                                />
+                                <Dropdown
+                                    label="المصدر"
+                                    options={sourceOptions}
+                                    selectedValue={selectedSource}
+                                    onChange={handleSourceChange}
+                                />
+                                <Dropdown
+                                    label="العام"
+                                    options={yearOptions}
+                                    selectedValue={selectedYear}
+                                    onChange={handleYearChange}
+                                />
+                            </div>
+                            
                         </div>
-                        <div className="flex col-span- items-center md:justify-end pb-3 sm:pb-4 justify-center gap-2">
+                        <div className="flex mt-2 col-span- items-center md:justify-end pb-3 sm:pb-4 justify-end ms-auto gap-2">
                             <button
                                 onClick={() => navigate('/Dashboard/add-evidence')}
                                 className="text-black text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] transition-colors"
@@ -199,6 +202,8 @@ export default function EvidencesTable() {
                             </button>
                         </div>
                     </div>
+
+                    
                 </div>
                 <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
                     {/* Table */}
@@ -257,12 +262,12 @@ export default function EvidencesTable() {
                                     </td>
                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 min-w-[150px]">
                                         <button
-                                            onClick={() => handleAction(evidence._id, 'download')}
+                                            onClick={() => handleAction(evidence?.pdfName, 'download')}
                                             className="text-black flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] whitespace-nowrap"
                                             title="تحميل"
-                                            disabled={downloadingReportId === evidence._id}
+                                            disabled={downloadingReportId === evidence?._id}
                                         >
-                                            {downloadingReportId === evidence._id ? (
+                                            {downloadingReportId === evidence?._id ? (
                                                 <svg className="animate-spin h-5 w-5 text-[#3D9635]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

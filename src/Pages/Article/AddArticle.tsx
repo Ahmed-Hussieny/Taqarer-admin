@@ -10,6 +10,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { handleAddArticle } from '../../Store/article.slice';
 import toast from 'react-hot-toast';
+import { ClipLoader } from 'react-spinners';
 
 const ArticleEditor: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -53,23 +54,27 @@ const ArticleEditor: React.FC = () => {
     const formData = new FormData();
     formData.append('title', values.title);
     formData.append('description', values.description);
-    formData.append('content', values.content);
     formData.append('link', values.link);
+  
     if (values.image) {
       formData.append('image', values.image);
     }
-
+  
+    // Create a file from the content
+    const contentFile = new File([values.content], 'article_content.txt', { type: 'text/plain' });
+    formData.append('contentFile', contentFile);
+    console.log('formData:', values.content);
     try {
       const data = await dispatch(handleAddArticle(formData));
-      if(data.payload.success) {
+      if (data.payload.success) {
         toast.success('تمت اضافة المقالة بنجاح');
         navigate(-1);
-      }else{
+      } else {
         toast.error('فشلت عملية اضافة المقالة');
       }
-      // 
     } catch (error) {
       console.error('Submission error:', error);
+      toast.error('حدث خطأ أثناء إضافة المقالة');
     }
     setSubmitting(false);
   };
@@ -96,7 +101,7 @@ const ArticleEditor: React.FC = () => {
               <img 
                 src={previewImage || img1} 
                 alt="Article" 
-                className="h-24 w-24  object-cover rounded-lg"
+                className="h-24 w-24 object-cover rounded-lg"
               />
             </div>
             <div className='col-span-4'>
@@ -108,7 +113,7 @@ const ArticleEditor: React.FC = () => {
                     name="image"
                     accept="image/*"
                     className="hidden"
-                    onChange={(event) => {
+                    onChange={async (event) => {
                       const file = event.currentTarget.files?.[0];
                       if (file) {
                         setFieldValue('image', file);
@@ -119,7 +124,7 @@ const ArticleEditor: React.FC = () => {
                 </label>
                 <button 
                   type="button"
-                  className='bg-[#EAF7E8] ms-2 text-main_color hover:opacity-90  border px-4 py-2 rounded-lg'
+                  className='bg-[#EAF7E8] ms-2 text-main_color hover:opacity-90 border px-4 py-2 rounded-lg'
                   onClick={() => {
                     setFieldValue('image', null);
                     setPreviewImage(null);
@@ -130,7 +135,7 @@ const ArticleEditor: React.FC = () => {
               </div>
               <ErrorMessage name="image" component="div" className="text-red-500 text-sm" />
               <p className="text-sm mt-2 text-slate-400 whitespace-nowrap">
-                مسموح ب jbg او gif او png الحجم الاقصى 800 كيلوبايت
+                مسموح ب jpg أو gif أو png. الحجم الأقصى 1 ميجابايت
               </p>
             </div>
           </div>
@@ -144,16 +149,14 @@ const ArticleEditor: React.FC = () => {
           />
           <ErrorMessage name="title" component="div" className="text-red-500 text-sm mb-2" />
 
-
           <p className="text-lg my-2 font-bold whitespace-nowrap">رابط المقالة</p>
           <Field
             type="text"
             name="link"
             className='w-full mb-1 border bg-[#F7F8F9] p-2 rounded-lg'
-            placeholder="عنوان المقالة"
+            placeholder="رابط المقالة"
           />
           <ErrorMessage name="link" component="div" className="text-red-500 text-sm mb-2" />
-
 
           <p className="text-lg my-2 font-bold whitespace-nowrap">وصف المقالة</p>
           <Field
@@ -190,8 +193,14 @@ const ArticleEditor: React.FC = () => {
               disabled={isSubmitting}
               className="text-white px-16 text-sm flex items-center gap-1 rounded-lg py-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
             >
-              <img src={plus2} alt='plus2' className="w-4 h-4" />
-              <span className='sm:inline'>اضافة</span>
+              {isSubmitting ? (
+                <ClipLoader color="#ffffff" size={20} /> // Show spinner when submitting
+              ) : (
+                <>
+                  <img src={plus2} alt='plus2' className="w-4 h-4" />
+                  <span className='sm:inline'>اضافة</span>
+                </>
+              )}
             </button>
           </div>
         </Form>

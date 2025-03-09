@@ -253,16 +253,6 @@ const AddEvidence: React.FC = () => {
                 <span className='sm:inline pe-2'>الغاء</span>
               </button>
               <button
-                // onClick={() => navigete('/add-reports')}
-                className="text-white  text-sm flex items-center gap-1 rounded-lg py-3 px-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
-                title="اضافة الدليل"
-              >
-                <img src={plus2} alt='plus2' className="w-4 h-4" />
-                <span className=' sm:inline pe-2'>اضافة الدليل</span>
-              </button>
-
-
-              <button
                 type="submit"
                 className="px-4 flex items-cente py-2 bg-main_color text-white rounded-lg hover:bg-opacity-90 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
                 disabled={loading}

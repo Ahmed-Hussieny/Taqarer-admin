@@ -9,7 +9,8 @@ import linkIcon from '../../assets/Icons/DashBoard/Frame 1261153292.svg';
 const ShowArticle: React.FC = () => {
   const { articleId } = useParams();
   const dispatch = useAppDispatch();
-  const [articleData, setArticleData] = useState<{ image?: string; title: string; description: string; link:string, content: string } | null>(null);
+  const [articleData, setArticleData] = useState<{ image?: string; title: string; description: string; link: string; content: string } | null>(null);
+  const [htmlContent, setHtmlContent] = useState<string>('');
 
   const fetchArticle = async () => {
     if (articleId) {
@@ -23,6 +24,17 @@ const ShowArticle: React.FC = () => {
           content: article.content,
           link: article.link
         });
+
+        // Fetch the HTML content from the file URL
+        if (article.content) {
+          try {
+            const response = await fetch(article.content);
+            const content = await response.text();
+            setHtmlContent(content);
+          } catch (error) {
+            console.error('Error fetching HTML content:', error);
+          }
+        }
       }
     }
   };
@@ -39,17 +51,19 @@ const ShowArticle: React.FC = () => {
       {articleData && (
         <>
           {articleData.image && (
-            <img src={articleData.image} alt="Article" className="w-ful h-64 object-cover m-auto rounded-md mb-4" />
+            <img src={articleData.image} alt="Article" className="w-full h-64 object-cover m-auto rounded-md mb-4" />
           )}
           <h1 className="text-2xl font-bold text-gray-800 mb-2">{articleData.title}</h1>
           <p className="text-gray-600 mb-4">{articleData.description}</p>
-          <div className="prose max-w-full" dangerouslySetInnerHTML={{ __html: articleData.content }} />
-          <button className="bg-main_color flex items-center text-white px-4 py-2 rounded-lg mt-4" onClick={() => {
-            window.open(articleData.link, '_blank');
-          }}>
-          <img src={linkIcon} alt='linkIcon'/>
-          قراءة التقرير
-          
+          <div className="prose max-w-full" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+          <button
+            className="bg-main_color flex items-center text-white px-4 py-2 rounded-lg mt-4"
+            onClick={() => {
+              window.open(articleData.link, '_blank');
+            }}
+          >
+            <img src={linkIcon} alt="linkIcon" />
+            قراءة التقرير
           </button>
         </>
       )}

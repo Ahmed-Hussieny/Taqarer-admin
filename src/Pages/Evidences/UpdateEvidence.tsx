@@ -266,7 +266,7 @@ const UpdateEvidence: React.FC = () => {
             {/* Submit Button */}
             <div className="flex col-span- items-center md:justify-end pb-3 sm:pb-4 justify-center gap-2">
               <button
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/Dashboard/evidences')}
                 type="submit"
                 className="text-black text-sm flex items-center gap-1 rounded-lg py-3 px-6 hover:bg-green-50 bg-[#EAF7E8] transition-colors"
                 title="الغاء"

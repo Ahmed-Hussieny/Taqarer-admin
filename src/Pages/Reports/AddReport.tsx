@@ -245,21 +245,12 @@ const OrderForm: React.FC = () => {
             {/* Submit Button */}
             <div className="flex col-span- items-center md:justify-end pb-3 sm:pb-4 justify-center gap-2">
               <button
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/Dashboard')}
                 type="submit"
                 className="text-black text-sm flex items-center gap-1 rounded-lg py-3 px-6 hover:bg-green-50 bg-[#EAF7E8] transition-colors"
                 title="الغاء"
               >
                 <span className='sm:inline pe-2'>الغاء</span>
-              </button>
-              <button
-                // onClick={() => navigete('/add-reports')}
-                type="submit"
-                className="text-white  text-sm flex items-center gap-1 rounded-lg py-3 px-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
-                title="اضافة التقرير"
-              >
-                <img src={plus2} alt='plus2' className="w-4 h-4" />
-                <span className=' sm:inline pe-2'>اضافة التقرير</span>
               </button>
 
 

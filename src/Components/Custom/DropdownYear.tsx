@@ -4,7 +4,7 @@ import DropdownT from "./DropdownT";
 
 const YearRangeSelector = ({ onYearChange }: { onYearChange: (startYear: string, endYear: string) => void }) => {
     const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 20 }, (_, i) => ({
+    const years = Array.from({ length: 50 }, (_, i) => ({
       value: (currentYear - i).toString(),
       label: (currentYear - i).toString(),
     }));

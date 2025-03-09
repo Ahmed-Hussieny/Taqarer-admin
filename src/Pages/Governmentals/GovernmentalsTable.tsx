@@ -170,7 +170,7 @@ export default function GovernmentalsTable() {
                                 <tr key={governmental?._id}>
                                     <td className="whitespace-nowrap flex justify-between py-4 pl-4 pr-3 items-center text-sm font-medium text-gray-900 sm:pl-6">
                                         <p>{governmental?.name}</p>
-                                        <img src={governmental?.image} alt='logo' className="w-32 h-12 inline-block rounded-full" />
+                                        {/* <img src={governmental?.image} alt='logo' className="w-32 h-12 inline-block rounded-full" /> */}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{governmental?.classification}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 min-w-[150px]">

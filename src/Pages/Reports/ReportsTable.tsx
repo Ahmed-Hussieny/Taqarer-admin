@@ -6,7 +6,7 @@ import plus from '../../assets/Icons/DashBoard/plus.svg'
 import plus2 from '../../assets/Icons/DashBoard/plus2.svg'
 import Dropdown from '../../Components/Custom/Dropdown';
 import { useAppDispatch } from '../../Store/store';
-import { handelDownloadReport, handleDeleteReport, handleGetAllReports} from '../../Store/report.slice';
+import { handelDownloadReport, handleDeleteReport, handleGetAllReports } from '../../Store/report.slice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
@@ -56,7 +56,7 @@ export default function ReportsTable() {
                     } finally {
                         setDownloadingReportId('');
                     }
-                break;
+                    break;
             }
         } catch (error) {
             console.error(`Error handling action "${action}":`, error);
@@ -74,8 +74,8 @@ export default function ReportsTable() {
             toast.error(data.payload.message);
         }
 
-        setShowDeleteModal(false); // Close the modal after deletion
-        setReportIdToDelete(null); // Reset the report ID
+        setShowDeleteModal(false);
+        setReportIdToDelete(null);
     };
 
     const changeCurrentPage = (page: number) => {
@@ -121,13 +121,13 @@ export default function ReportsTable() {
         setSelectedYear('');
         fetchData({ classification: value });
     };
-    
+
     const handleSourceChange = (value: string) => {
         setSelectedSource(value);
         setSelectedYear('');
         fetchData({ source: value, classification: selectedName });
     };
-    
+
     const handleYearChange = (value: string) => {
         setSelectedYear(value);
         fetchData({ year: value, classification: selectedName, source: selectedSource });
@@ -170,30 +170,33 @@ export default function ReportsTable() {
                     </div>
 
                     {/* Right Section - Filters & Actions */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 col-span-2 gap-3 rounded-lg">
-                        <div className="flex col-span- items-center md:justify-start w-auto justify-center">
-                            <Dropdown
-                                label="نوع التقرير"
-                                options={nameOptions}
-                                selectedValue={selectedName}
-                                onChange={handleNameChange}
-                            />
-                            <Dropdown
-                                label="المصدر"
-                                options={sourceOptions}
-                                selectedValue={selectedSource}
-                                onChange={handleSourceChange}
-                            />
-                            <Dropdown
-                                label="العام"
-                                options={yearOptions}
-                                selectedValue={selectedYear}
-                                onChange={handleYearChange}
-                            />
+                    <div className="col-span-2 gap-3 items-center rounded-lg">
+                        <div className="justify-between items-center">
+                            <div className='grid grid-cols-3 gap-2'>
+                                <Dropdown
+                                    label="نوع التقرير"
+                                    options={nameOptions}
+                                    selectedValue={selectedName}
+                                    onChange={handleNameChange}
+                                />
+                                <Dropdown
+                                    label="المصدر"
+                                    options={sourceOptions}
+                                    selectedValue={selectedSource}
+                                    onChange={handleSourceChange}
+                                />
+                                <Dropdown
+                                    label="العام"
+                                    options={yearOptions}
+                                    selectedValue={selectedYear}
+                                    onChange={handleYearChange}
+                                />
+                            </div>
+
                         </div>
-                        <div className="flex col-span- items-center md:justify-end pb-3 sm:pb-4 justify-center gap-2">
+                        <div className="flex mt-2 col-span- items-center md:justify-end pb-3 sm:pb-4 justify-end ms-auto gap-2">
                             <button
-                                onClick={() => navigate('/Dashboard/add-report')}
+                                onClick={() => navigate('/Dashboard/add-evidence')}
                                 className="text-black text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] transition-colors"
                                 title="اضافة تقرير"
                             >
@@ -201,7 +204,7 @@ export default function ReportsTable() {
                                 <span className=' sm:inline pe-2'>اضافة تقرير</span>
                             </button>
                             <button
-                                onClick={() => navigate('/Dashboard/add-reports')}
+                                onClick={() => navigate('/Dashboard/add-evidences')}
                                 className="text-white  text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
                                 title="اضافة مجموعة تقارير"
                             >
