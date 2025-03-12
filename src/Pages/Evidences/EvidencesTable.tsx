@@ -23,6 +23,7 @@ export default function EvidencesTable() {
     const [selectedSource, setSelectedSource] = useState<string>('');
     const [selectedYear, setSelectedYear] = useState<string>('');
     const [downloadingReportId, setDownloadingReportId] = useState<string>('');
+    const [searchValue, setSearchValue] = useState<string>('');
     const [nameOptions, setNameOptions] = useState<DropdownItem[]>([]);
     const [sourceOptions, setSourceOptions] = useState<DropdownItem[]>([]);
     const [yearOptions, setYearOptions] = useState<DropdownItem[]>([]);
@@ -34,7 +35,12 @@ export default function EvidencesTable() {
 
     const changeCurrentPage = (page: number) => {
         setCurrentPage(page);
-        fetchData({ page });
+        fetchData({ page,
+            classification: selectedName,
+            source: selectedSource,
+            year: selectedYear,
+            custom: searchValue
+         });
     };
 
     const fetchData = async ({
@@ -71,22 +77,33 @@ export default function EvidencesTable() {
 
     const handleNameChange = (value: string) => {
         setSelectedName(value);
-        fetchData({ classification: value});
+        fetchData({ classification: value,custom: searchValue,
+            page: 1});
     }
 
     const handleSourceChange = (value: string) => {
         setSelectedSource(value);
-        fetchData({ classification: selectedName, source: value});
+        fetchData({ classification: selectedName, source: value,custom: searchValue,
+            page: 1});
     };
     const handleYearChange = (value: string) => {
         setSelectedYear(value);
-        fetchData({ classification: selectedName, source: selectedSource, year: value });
+        fetchData({ classification: selectedName, source: selectedSource, year: value,
+            custom: searchValue,
+            page: 1
+         });
     }
     const handleKeyUp = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedYear("");
         setSelectedSource("");
         setSelectedName("");
-        fetchData({ custom: (event.target as HTMLInputElement).value });
+        setSearchValue(event.target.value);
+        fetchData({ custom: (event.target as HTMLInputElement).value,
+            classification: selectedName,
+            source: selectedSource,
+            year: selectedYear,
+            page: 1
+         });
     };
     const handleAction = async (reportId: string, action: string) => {
         try {

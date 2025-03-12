@@ -28,6 +28,7 @@ export default function ReportsTable() {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedName, setSelectedName] = useState<string>('');
     const [downloadingReportId, setDownloadingReportId] = useState<string>('');
+    const [searchValue, setSearchValue] = useState<string>('');
     const [selectedSource, setSelectedSource] = useState<string>('');
     const [selectedYear, setSelectedYear] = useState<string>('');
     const [nameOptions, setNameOptions] = useState<DropdownItem[]>([]);
@@ -80,7 +81,12 @@ export default function ReportsTable() {
 
     const changeCurrentPage = (page: number) => {
         setCurrentPage(page);
-        fetchData({ page });
+        fetchData({ page,
+            classification: selectedName,
+            source: selectedSource,
+            year: selectedYear,
+            custom: '',
+         });
     };
 
     const dispatch = useAppDispatch();
@@ -91,7 +97,8 @@ export default function ReportsTable() {
         year = '',
         custom = '',
     }: { page?: number, classification?: string, source?: string, year?: string, custom?: string }) => {
-        await dispatch(handleGetAllReports({ page, classification, source, year, custom }));
+        const data = await dispatch(handleGetAllReports({ page, classification, source, year, custom }));
+        console.log(data.payload);
     };
 
     useEffect(() => {
@@ -125,19 +132,31 @@ export default function ReportsTable() {
     const handleSourceChange = (value: string) => {
         setSelectedSource(value);
         setSelectedYear('');
-        fetchData({ source: value, classification: selectedName });
+        fetchData({ source: value, classification: selectedName,
+            custom: searchValue,
+            page: 1
+         });
     };
 
     const handleYearChange = (value: string) => {
         setSelectedYear(value);
-        fetchData({ year: value, classification: selectedName, source: selectedSource });
+        fetchData({ year: value, classification: selectedName, source: selectedSource,
+            custom: searchValue,
+            page: 1
+         });
     };
 
     const handleKeyUp = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedYear("");
         setSelectedSource("");
         setSelectedName("");
-        fetchData({ custom: (event.target as HTMLInputElement).value });
+        setSearchValue(event.target.value);
+        fetchData({ custom: (event.target as HTMLInputElement).value,
+            classification: selectedName,
+            source: selectedSource,
+            year: selectedYear,
+            page: 1,
+         });
     };
 
     return (
@@ -160,6 +179,7 @@ export default function ReportsTable() {
                                     <input
                                         type="search"
                                         id="default-search"
+                                        value={searchValue}
                                         className="ps-10 w-full text-sm text-main_color placeholder:text-main_color border border-gray-300 rounded-lg bg-gray-50 py-2.5"
                                         placeholder="ابحث الأن ..."
                                         onChange={handleKeyUp}
@@ -196,7 +216,7 @@ export default function ReportsTable() {
                         </div>
                         <div className="flex mt-2 col-span- items-center md:justify-end pb-3 sm:pb-4 justify-end ms-auto gap-2">
                             <button
-                                onClick={() => navigate('/Dashboard/add-evidence')}
+                                onClick={() => navigate('/Dashboard/add-report')}
                                 className="text-black text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-50 bg-[#EAF7E8] transition-colors"
                                 title="اضافة تقرير"
                             >
@@ -204,7 +224,7 @@ export default function ReportsTable() {
                                 <span className=' sm:inline pe-2'>اضافة تقرير</span>
                             </button>
                             <button
-                                onClick={() => navigate('/Dashboard/add-evidences')}
+                                onClick={() => navigate('/Dashboard/add-reports')}
                                 className="text-white  text-sm flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-green-600 bg-[#3D9635] transition-colors"
                                 title="اضافة مجموعة تقارير"
                             >

@@ -4,7 +4,6 @@ import { changeActiveNav, changeCurrentPath } from '../../Store/user.slice';
 import { useSelector } from 'react-redux';
 import { Pakage } from '../../Interfaces/pakage';
 import { handleGetAllPayments, handleDeletePakage, handleTogglePakage } from '../../Store/pakage.slice';
-import { Toaster } from 'react-hot-toast';
 import plus2 from '../../assets/Icons/DashBoard/plus2.svg'
 import icon from '../../assets/Icons/trueIcon.svg';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +15,8 @@ export default function Subscribtion() {
   const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
   const [loadingStates, setLoadingStates] = useState<{ [key: string]: string }>({});
   const [isFetching, setIsFetching] = useState(true);
-
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -41,7 +41,11 @@ export default function Subscribtion() {
   const handleDelete = async (id: string) => {
     setLoadingStates(prev => ({ ...prev, [id]: 'delete' }));
     try {
-      await dispatch(handleDeletePakage({ id }));
+      const data = await dispatch(handleDeletePakage({ id }));
+      if(!data.payload.success) {
+        setDeleteErrorMessage(data.payload.message);
+        setShowConfirmModal(true);
+      }
       await dispatch(handleGetAllPayments());
     } finally {
       setLoadingStates(prev => ({ ...prev, [id]: '' }));
@@ -61,7 +65,6 @@ export default function Subscribtion() {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className='flex justify-between items-center'>
         <div><p className='font-bold text-lg'>الباقات</p></div>
         <button
@@ -162,6 +165,19 @@ export default function Subscribtion() {
                     onClick={() => setSelectedPackageId(null)}
                     className="bg-gray-300 col-span-1 px-4 py-2 rounded-md"
                   >
+                    إلغاء
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showConfirmModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+              <div className="bg-white p-6 text-center rounded-lg shadow">
+                <h2 className="text-lg font-semibold mb-4 text-red-700">{deleteErrorMessage}</h2>
+                <div className='flex justify-center gap-2'>
+                  <button onClick={() => setShowConfirmModal(false)} className="bg-gray-300 col-span-1 px-4 py-2 rounded-md">
                     إلغاء
                   </button>
                 </div>

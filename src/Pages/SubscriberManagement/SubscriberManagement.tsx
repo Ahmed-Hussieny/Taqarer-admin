@@ -33,7 +33,7 @@ export default function SubscriberManagement() {
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const [togglingUserId, setTogglingUserId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
 
   const fetchData = async ({
     page = 1,
@@ -73,6 +73,20 @@ export default function SubscriberManagement() {
       setDeletingUserId(null);
     }
   };
+
+
+const handleDeleteClick = (id: string) => {
+  setUserToDelete(id);
+  setShowConfirmModal(true);
+};
+
+const confirmDelete = async () => {
+  if (userToDelete) {
+    await deleteUser(userToDelete);
+    setUserToDelete(null);
+  }
+  setShowConfirmModal(false);
+};
 
   const toggleVerifyUser = async (id: string) => {
     try {
@@ -231,33 +245,34 @@ export default function SubscriberManagement() {
 
                     {/* pin */}
                     <button
-                    onClick={() => setShowConfirmModal(true)}
-            
-            disabled={deletingUserId === clientUser._id}
-            className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
-            title="حذف"
-          >
-            {deletingUserId === clientUser._id ? (
-              <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
-            ) : (
-              <img className="w-4 h-4" src={deleteIcon} alt="delete" />
-            )}
-          </button>
-          {showConfirmModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-                <div className="bg-white p-6 text-center rounded-lg shadow">
-                  <h2 className="text-lg font-semibold mb-4">هل أنت متأكد؟</h2>
-                  <div className='grid grid-cols-3 gap-2'>
-                    <button onClick={() => deleteUser(clientUser._id)} className="bg-red-600 col-span-2 text-white px-4 py-2 rounded-md mr-2">
-                      نعم, حذف الحساب
-                    </button>
-                    <button onClick={() => setShowConfirmModal(false)} className="bg-gray-300 col-span-1 px-4 py-2 rounded-md">
-                      إلغاء
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+  onClick={() => handleDeleteClick(clientUser._id)}
+  disabled={deletingUserId === clientUser._id}
+  className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
+  title="حذف"
+>
+  {deletingUserId === clientUser._id ? (
+    <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+  ) : (
+    <img className="w-4 h-4" src={deleteIcon} alt="delete" />
+  )}
+</button>
+
+{showConfirmModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div className="bg-white p-6 text-center rounded-lg shadow">
+      <h2 className="text-lg font-semibold ">هل أنت متأكد من حذف الحساب؟</h2>
+      <span className='mb-4'>{clientUsers.find(user => user._id === userToDelete)?.email}</span>
+      <div className='grid grid-cols-3 gap-2'>
+        <button onClick={confirmDelete} className="bg-red-600 col-span-2 text-white px-4 py-2 rounded-md mr-2">
+          نعم, حذف الحساب 
+        </button>
+        <button onClick={() => setShowConfirmModal(false)} className="bg-gray-300 col-span-1 px-4 py-2 rounded-md">
+          إلغاء
+        </button>
+      </div>
+    </div>
+  </div>
+)}
                   </div>
                 </td>
               </tr>

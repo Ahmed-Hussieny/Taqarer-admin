@@ -82,6 +82,7 @@ export const handleDeletePakage = createAsyncThunk("report/handleDeletePakage", 
                 accesstoken: `Bearer_${localStorage.getItem("authToken")}`,
             },
         });
+        console.log(response.data);
         return response.data;
     } catch (error) {
         const err = error as ApiErrorResponse;
@@ -200,7 +201,7 @@ const pakageSlice = createSlice({
         //^handleDeletePakage
         builder.addCase(handleDeletePakage.fulfilled, (state, action) => {
             state.loading = false;
-            state.pakages = state.pakages.filter((pakage) => pakage._id !== action.payload.deletedPaymentPackage._id);
+            state.pakages = state.pakages.filter((pakage) => pakage?._id !== action.payload?.deletedPaymentPackage?._id);
         });
         builder.addCase(handleDeletePakage.rejected, (state) => {
             state.loading = false;
