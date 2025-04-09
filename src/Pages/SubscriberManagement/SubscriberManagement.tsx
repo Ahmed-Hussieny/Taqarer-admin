@@ -6,6 +6,7 @@ import deleteIcon from '../../assets/Icons/DashBoard/trash.svg';
 import pin from '../../assets/Icons/DashBoard/Pin.svg';
 import { useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
+import { Pagination } from '../../Components/Custom/Pagination';
 interface Package {
   _id: string;
   name: string;
@@ -75,18 +76,18 @@ export default function SubscriberManagement() {
   };
 
 
-const handleDeleteClick = (id: string) => {
-  setUserToDelete(id);
-  setShowConfirmModal(true);
-};
+  const handleDeleteClick = (id: string) => {
+    setUserToDelete(id);
+    setShowConfirmModal(true);
+  };
 
-const confirmDelete = async () => {
-  if (userToDelete) {
-    await deleteUser(userToDelete);
-    setUserToDelete(null);
-  }
-  setShowConfirmModal(false);
-};
+  const confirmDelete = async () => {
+    if (userToDelete) {
+      await deleteUser(userToDelete);
+      setUserToDelete(null);
+    }
+    setShowConfirmModal(false);
+  };
 
   const toggleVerifyUser = async (id: string) => {
     try {
@@ -97,7 +98,7 @@ const confirmDelete = async () => {
       } else {
         toast.success('تم تعليق المشترك')
       }
-    } catch{
+    } catch {
       toast.error('حدث خطأ أثناء التحديث');
     } finally {
       setTogglingUserId(null);
@@ -209,70 +210,70 @@ const confirmDelete = async () => {
                 <td className="whitespace-nowrap px-3 py-4 w-40 text-sm text-gray-500 min-w-[200px]">
                   <div className="flex items-center gap-2">
 
-                   {clientUser.isVerified ? (
-            <button
-              onClick={() => toggleVerifyUser(clientUser._id)}
-              disabled={togglingUserId === clientUser._id}
-              className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
-              title="تعليق"
-            >
-              {togglingUserId === clientUser._id ? (
-                <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
-              ) : (
-                <>
-                  <img src={pin} alt="pin" className="w-4 h-4" />
-                  <span>تعليق</span>
-                </>
-              )}
-            </button>
-          ) : (
-            <button
-              onClick={() => toggleVerifyUser(clientUser._id)}
-              disabled={togglingUserId === clientUser._id}
-              className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
-              title="تفعيل"
-            >
-              {togglingUserId === clientUser._id ? (
-                <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
-              ) : (
-                <>
-                  <img src={pin} alt="pin" className="w-4 h-4" />
-                  <span>تفعيل</span>
-                </>
-              )}
-            </button>
-          )}
+                    {clientUser.isVerified ? (
+                      <button
+                        onClick={() => toggleVerifyUser(clientUser._id)}
+                        disabled={togglingUserId === clientUser._id}
+                        className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
+                        title="تعليق"
+                      >
+                        {togglingUserId === clientUser._id ? (
+                          <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+                        ) : (
+                          <>
+                            <img src={pin} alt="pin" className="w-4 h-4" />
+                            <span>تعليق</span>
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => toggleVerifyUser(clientUser._id)}
+                        disabled={togglingUserId === clientUser._id}
+                        className="text-[#F59E0B] flex items-center gap-1 rounded-lg py-2 px-3 hover:bg-gray-100 bg-[#FFF6E7] whitespace-nowrap"
+                        title="تفعيل"
+                      >
+                        {togglingUserId === clientUser._id ? (
+                          <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+                        ) : (
+                          <>
+                            <img src={pin} alt="pin" className="w-4 h-4" />
+                            <span>تفعيل</span>
+                          </>
+                        )}
+                      </button>
+                    )}
 
                     {/* pin */}
                     <button
-  onClick={() => handleDeleteClick(clientUser._id)}
-  disabled={deletingUserId === clientUser._id}
-  className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
-  title="حذف"
->
-  {deletingUserId === clientUser._id ? (
-    <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
-  ) : (
-    <img className="w-4 h-4" src={deleteIcon} alt="delete" />
-  )}
-</button>
+                      onClick={() => handleDeleteClick(clientUser._id)}
+                      disabled={deletingUserId === clientUser._id}
+                      className="text-red-600 p-2 rounded-lg bg-[#FFF1F1] hover:bg-red-50 flex items-center justify-center"
+                      title="حذف"
+                    >
+                      {deletingUserId === clientUser._id ? (
+                        <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+                      ) : (
+                        <img className="w-4 h-4" src={deleteIcon} alt="delete" />
+                      )}
+                    </button>
 
-{showConfirmModal && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-    <div className="bg-white p-6 text-center rounded-lg shadow">
-      <h2 className="text-lg font-semibold ">هل أنت متأكد من حذف الحساب؟</h2>
-      <span className='mb-4'>{clientUsers.find(user => user._id === userToDelete)?.email}</span>
-      <div className='grid grid-cols-3 gap-2'>
-        <button onClick={confirmDelete} className="bg-red-600 col-span-2 text-white px-4 py-2 rounded-md mr-2">
-          نعم, حذف الحساب 
-        </button>
-        <button onClick={() => setShowConfirmModal(false)} className="bg-gray-300 col-span-1 px-4 py-2 rounded-md">
-          إلغاء
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+                    {showConfirmModal && (
+                      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                        <div className="bg-white p-6 text-center rounded-lg shadow">
+                          <h2 className="text-lg font-semibold ">هل أنت متأكد من حذف الحساب؟</h2>
+                          <span className='mb-4'>{clientUsers.find(user => user._id === userToDelete)?.email}</span>
+                          <div className='grid grid-cols-3 gap-2'>
+                            <button onClick={confirmDelete} className="bg-red-600 col-span-2 text-white px-4 py-2 rounded-md mr-2">
+                              نعم, حذف الحساب
+                            </button>
+                            <button onClick={() => setShowConfirmModal(false)} className="bg-gray-300 col-span-1 px-4 py-2 rounded-md">
+                              إلغاء
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -280,44 +281,7 @@ const confirmDelete = async () => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-center items-center mt-8 mb-4" dir="rtl">
-        {/* Next Button (left side in RTL) */}
-
-        <button
-          onClick={() => changeCurrentPage(Math.max(1, currentPage - 1))}
-          disabled={currentPage === 1}
-          className="px-3 py-1 bg-[#BBC3CF]  text-black hover:bg-gray-100 rounded-s-lg disabled:opacity-50"
-          aria-label="الصفحة السابقة"
-        >
-          &lt; {/* Right-pointing arrow for "Previous" in RTL */}
-        </button>
-        {/* Page Numbers (descending order) */}
-        {[...Array(numberOfPages)].map((_, index) => {
-          return (
-            <button
-              key={index + 1}
-              onClick={() => changeCurrentPage(index + 1)}
-              className={`px-3 py-1 flex items-center justify-center ${currentPage === index + 1
-                ? 'bg-[#BBC3CF]  text-black border'
-                : 'text-black bg-[#F7F8F9] border border-1/2 border-slate-300'
-                }`}
-              aria-label={`الصفحة ${index + 1}`}
-            >
-              <span>{index + 1}</span>
-            </button>
-          );
-        })}
-
-        {/* Previous Button (right side in RTL) */}
-        <button
-          onClick={() => changeCurrentPage(Math.min(numberOfPages, currentPage + 1))}
-          disabled={currentPage === numberOfPages}
-          className="px-3 py-1 bg-[#BBC3CF]  text-black hover:bg-gray-100 rounded-l-lg disabled:opacity-50"
-          aria-label="الصفحة التالية"
-        >
-          &gt; {/* Left-pointing arrow for "Next" in RTL */}
-        </button>
-      </div>
+      <Pagination currentPage={currentPage} numberOfPages={numberOfPages} changeCurrentPage={changeCurrentPage} />
     </div>
   )
 }

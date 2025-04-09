@@ -7,6 +7,7 @@ import ArticleItem from './ArticleItem';
 import { handleGetAllArticles } from '../../Store/article.slice';
 import { Article } from '../../Interfaces/article';
 import { useSelector } from 'react-redux';
+import { Pagination } from '../../Components/Custom/Pagination';
 
 export default function Articles() {
   const navigate = useNavigate();
@@ -86,44 +87,7 @@ export default function Articles() {
           return <ArticleItem key={article._id} article={article} />;
         })}
       </div>
-      <div className="flex justify-center items-center mt-8 mb-4" dir="rtl">
-        {/* Next Button (left side in RTL) */}
-
-        <button
-          onClick={() => changeCurrentPage(Math.max(1, currentPage - 1))}
-          disabled={currentPage === 1}
-          className="px-3 py-1 bg-[#BBC3CF]  text-black hover:bg-gray-100 rounded-s-lg disabled:opacity-50"
-          aria-label="الصفحة السابقة"
-        >
-          &lt; {/* Right-pointing arrow for "Previous" in RTL */}
-        </button>
-        {/* Page Numbers (descending order) */}
-        {[...Array(numberOfPages)].map((_, index) => {
-          return (
-            <button
-              key={index + 1}
-              onClick={() => changeCurrentPage(index + 1)}
-              className={`px-3 py-1 flex items-center justify-center ${currentPage === index + 1
-                  ? 'bg-[#BBC3CF]  text-black border'
-                  : 'text-black bg-[#F7F8F9] border border-1/2 border-slate-300'
-                }`}
-              aria-label={`الصفحة ${index + 1}`}
-            >
-              <span>{index + 1}</span>
-            </button>
-          );
-        })}
-
-        {/* Previous Button (right side in RTL) */}
-        <button
-          onClick={() => changeCurrentPage(Math.min(numberOfPages, currentPage + 1))}
-          disabled={currentPage === numberOfPages}
-          className="px-3 py-1 bg-[#BBC3CF]  text-black hover:bg-gray-100 rounded-l-lg disabled:opacity-50"
-          aria-label="الصفحة التالية"
-        >
-          &gt; {/* Left-pointing arrow for "Next" in RTL */}
-        </button>
-      </div>
+      <Pagination currentPage={currentPage} numberOfPages={numberOfPages} changeCurrentPage={changeCurrentPage} />
     </div>
   )
 }

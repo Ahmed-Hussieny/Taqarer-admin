@@ -12,6 +12,7 @@ import { changeActiveNav, changeCurrentPath } from '../../Store/user.slice';
 import { Evidence } from '../../Interfaces/evidence';
 import { handleDeleteGovernmental, handleGetAllGovernmentals } from '../../Store/governmental.slice';
 import Dropdown from '../../Components/Custom/Dropdown';
+import { Pagination } from '../../Components/Custom/Pagination';
 interface DropdownItem {
     value: string;
     label: string;
@@ -208,40 +209,7 @@ export default function GovernmentalsTable() {
                     </table>
                 </div>
                 {/* Pagination controls */}
-                <div className="flex justify-center items-center mt-8 mb-4" dir="rtl">
-                    <button
-                        onClick={() => changeCurrentPage(Math.max(1, currentPage - 1))}
-                        disabled={currentPage === 1}
-                        className="px-3 py-1 bg-[#BBC3CF] text-black hover:bg-gray-100 rounded-s-lg disabled:opacity-50"
-                        aria-label="الصفحة السابقة"
-                    >
-                        &lt;
-                    </button>
-                    {[...Array(numberOfPages)].map((_, index) => {
-                        return (
-                            <button
-                                key={index + 1}
-                                onClick={() => changeCurrentPage(index + 1)}
-                                className={`px-3 py-1 flex items-center justify-center ${
-                                    currentPage === index + 1
-                                        ? 'bg-[#BBC3CF] text-black border'
-                                        : 'text-black bg-[#F7F8F9] border border-1/2 border-slate-300'
-                                }`}
-                                aria-label={`الصفحة ${index + 1}`}
-                            >
-                                <span>{index + 1}</span>
-                            </button>
-                        );
-                    })}
-                    <button
-                        onClick={() => changeCurrentPage(Math.min(numberOfPages, currentPage + 1))}
-                        disabled={currentPage === numberOfPages}
-                        className="px-3 py-1 bg-[#BBC3CF] text-black hover:bg-gray-100 rounded-l-lg disabled:opacity-50"
-                        aria-label="الصفحة التالية"
-                    >
-                        &gt;
-                    </button>
-                </div>
+                <Pagination currentPage={currentPage} numberOfPages={numberOfPages} changeCurrentPage={changeCurrentPage} />
             </div>
 
             {/* Delete Confirmation Modal */}

@@ -12,6 +12,7 @@ import { changeActiveNav, changeCurrentPath } from '../../Store/user.slice';
 import Dropdown from '../../Components/Custom/Dropdown';
 import { handelDownloadEvidence, handleDeleteEvidence, handleGetAllEvidences } from '../../Store/evidence.slice';
 import { Evidence } from '../../Interfaces/evidence';
+import { Pagination } from '../../Components/Custom/Pagination';
 
 interface DropdownItem {
     value: string;
@@ -35,12 +36,13 @@ export default function EvidencesTable() {
 
     const changeCurrentPage = (page: number) => {
         setCurrentPage(page);
-        fetchData({ page,
+        fetchData({
+            page,
             classification: selectedName,
             source: selectedSource,
             year: selectedYear,
             custom: searchValue
-         });
+        });
     };
 
     const fetchData = async ({
@@ -77,33 +79,39 @@ export default function EvidencesTable() {
 
     const handleNameChange = (value: string) => {
         setSelectedName(value);
-        fetchData({ classification: value,custom: searchValue,
-            page: 1});
+        fetchData({
+            classification: value, custom: searchValue,
+            page: 1
+        });
     }
 
     const handleSourceChange = (value: string) => {
         setSelectedSource(value);
-        fetchData({ classification: selectedName, source: value,custom: searchValue,
-            page: 1});
+        fetchData({
+            classification: selectedName, source: value, custom: searchValue,
+            page: 1
+        });
     };
     const handleYearChange = (value: string) => {
         setSelectedYear(value);
-        fetchData({ classification: selectedName, source: selectedSource, year: value,
+        fetchData({
+            classification: selectedName, source: selectedSource, year: value,
             custom: searchValue,
             page: 1
-         });
+        });
     }
     const handleKeyUp = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedYear("");
         setSelectedSource("");
         setSelectedName("");
         setSearchValue(event.target.value);
-        fetchData({ custom: (event.target as HTMLInputElement).value,
+        fetchData({
+            custom: (event.target as HTMLInputElement).value,
             classification: selectedName,
             source: selectedSource,
             year: selectedYear,
             page: 1
-         });
+        });
     };
     const handleAction = async (reportId: string, action: string) => {
         try {
@@ -177,7 +185,7 @@ export default function EvidencesTable() {
 
                     {/* Right Section - Filters & Actions */}
                     <div className="col-span-2 gap-3 items-center rounded-lg">
-                    <div className="justify-between items-center">
+                        <div className="justify-between items-center">
                             <div className='grid grid-cols-3 gap-2'>
                                 <Dropdown
                                     label="نوع الدليل"
@@ -198,7 +206,7 @@ export default function EvidencesTable() {
                                     onChange={handleYearChange}
                                 />
                             </div>
-                            
+
                         </div>
                         <div className="flex mt-2 col-span- items-center md:justify-end pb-3 sm:pb-4 justify-end ms-auto gap-2">
                             <button
@@ -220,7 +228,7 @@ export default function EvidencesTable() {
                         </div>
                     </div>
 
-                    
+
                 </div>
                 <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
                     {/* Table */}
@@ -303,44 +311,8 @@ export default function EvidencesTable() {
                     </table>
                 </div>
                 {/* Pagination controls */}
-                <div className="flex justify-center items-center mt-8 mb-4" dir="rtl">
-                    {/* Next Button (left side in RTL) */}
+                <Pagination currentPage={currentPage} numberOfPages={numberOfPages} changeCurrentPage={changeCurrentPage} />
 
-                    <button
-                        onClick={() => changeCurrentPage(Math.max(1, currentPage - 1))}
-                        disabled={currentPage === 1}
-                        className="px-3 py-1 bg-[#BBC3CF]  text-black hover:bg-gray-100 rounded-s-lg disabled:opacity-50"
-                        aria-label="الصفحة السابقة"
-                    >
-                        &lt; {/* Right-pointing arrow for "Previous" in RTL */}
-                    </button>
-                    {/* Page Numbers (descending order) */}
-                    {[...Array(numberOfPages)].map((_, index) => {
-                        return (
-                            <button
-                                key={index + 1}
-                                onClick={() => changeCurrentPage(index + 1)}
-                                className={`px-3 py-1 flex items-center justify-center ${currentPage === index + 1
-                                    ? 'bg-[#BBC3CF]  text-black border'
-                                    : 'text-black bg-[#F7F8F9] border border-1/2 border-slate-300'
-                                    }`}
-                                aria-label={`الصفحة ${index + 1}`}
-                            >
-                                <span>{index + 1}</span>
-                            </button>
-                        );
-                    })}
-
-                    {/* Previous Button (right side in RTL) */}
-                    <button
-                        onClick={() => changeCurrentPage(Math.min(numberOfPages, currentPage + 1))}
-                        disabled={currentPage === numberOfPages}
-                        className="px-3 py-1 bg-[#BBC3CF]  text-black hover:bg-gray-100 rounded-l-lg disabled:opacity-50"
-                        aria-label="الصفحة التالية"
-                    >
-                        &gt; {/* Left-pointing arrow for "Next" in RTL */}
-                    </button>
-                </div>
             </div>
 
             {showDeleteModal && (
